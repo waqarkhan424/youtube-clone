@@ -1,16 +1,18 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { MetadataModule } from './metadata/metadata.module';
+import { VideoModule } from './video/video.module';
+import { UserModule } from './user/user.module';
+import { ChannelModule } from './channel/channel.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot(process.env.MONGODB_URI),
-    MetadataModule, // Connect to MongoDB
+    VideoModule,
+    UserModule,
+    ChannelModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule { }
 
