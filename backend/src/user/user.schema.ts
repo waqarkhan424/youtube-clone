@@ -16,7 +16,11 @@ export class User extends Document {
     joinedAt: Date;
 
     @Prop({ default: [] })
-    channels: string[]; // Array of channel IDs this user owns.
+    channels: Array<{
+        channelName: string;
+        description: string;
+        profilePic: string;
+    }>; // Array of channel details
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

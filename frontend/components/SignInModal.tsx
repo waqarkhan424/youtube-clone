@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import axios from "axios";
 
 interface SignInModalProps {
     isOpen: boolean;
@@ -14,28 +15,36 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => {
     const [description, setDescription] = useState<string>("");
     const [profilePic, setProfilePic] = useState<File | null>(null);
 
-    const handleSubmit = () => {
-        const formData = new FormData();
-        formData.append("username", username);
-        formData.append("email", email);
-        formData.append("password", password);
-        formData.append("channelName", channelName);
-        formData.append("description", description);
-        if (profilePic) {
-            formData.append("profilePic", profilePic);
+    const handleSubmit = async () => {
+
+        try {
+            const formData = new FormData();
+            formData.append("username", username);
+            formData.append("email", email);
+            formData.append("password", password);
+            formData.append("channelName", channelName);
+            formData.append("description", description);
+            if (profilePic) {
+                formData.append("profilePic", profilePic);
+            }
+
+
+            // Send data to backend
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+
+            console.log("User created successfully:", response.data);
+            onClose(); // Close the modal after successful submission
+        } catch (error) {
+            console.error("Error creating user:", error);
         }
-
-        // Perform sign-in or sign-up logic here
-        console.log("Submitted data:", {
-            username,
-            email,
-            password,
-            channelName,
-            description,
-            profilePic,
-        });
-
-        onClose(); // Close the modal after submission
     };
 
     if (!isOpen) return null;
@@ -89,7 +98,10 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => {
                     <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded-md">
                         Cancel
                     </button>
-                    <button onClick={handleSubmit} className="px-4 py-2 bg-blue-500 text-white rounded-md">
+                    <button
+                        onClick={handleSubmit}
+                        className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                    >
                         Submit
                     </button>
                 </div>
