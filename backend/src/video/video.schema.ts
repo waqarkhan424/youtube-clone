@@ -15,22 +15,33 @@ export class Video extends Document {
     @Prop({ default: Date.now })
     uploadedAt: Date;
 
+    @Prop({ required: true })
+    userId: string; // ID of the user who uploaded the video
 
-    @Prop({ required: true }) // Associate with a user
-    userId: string;
+    @Prop({ required: true })
+    channelName: string; // Channel associated with the video
 
-    @Prop({ default: 0 }) // Track video views
+    @Prop({ default: 0 })
     views: number;
 
-    @Prop({ default: 0 }) // Track video likes
+    @Prop({ default: 0 })
     likes: number;
 
-    @Prop({ default: 0 }) // Track video dislikes
+    @Prop({ default: 0 })
     dislikes: number;
 
-    @Prop({ type: [{ userId: String, text: String, postedAt: { type: Date, default: Date.now } }] }) // Comments
-    comments: Array<{ userId: string; text: string; postedAt: Date }>;
-
+    @Prop({
+        type: [
+            {
+                userId: String,
+                username: String,
+                text: String,
+                postedAt: { type: Date, default: Date.now },
+            },
+        ],
+        default: [],
+    })
+    comments: Array<{ userId: string; username: string; text: string; postedAt: Date }>;
 }
 
 export const VideoSchema = SchemaFactory.createForClass(Video);

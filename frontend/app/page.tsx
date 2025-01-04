@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import VideoCard from "../components/VideoCard";
+import { useRouter } from "next/navigation";
+import SignInModal from "@/components/SignInModal";
 import axios from "axios";
 
 interface Video {
@@ -14,10 +16,14 @@ interface Video {
 }
 
 const HomePage: React.FC = () => {
+  const router = useRouter()
+
   const [videos, setVideos] = useState<Video[]>([]);
   console.log("videos::::::", videos)
   const [searchQuery, setSearchQuery] = useState<string>(""); // State for search query
   const [sortOption, setSortOption] = useState<string>("latest"); // State for sort option
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
 
   const fetchVideos = async () => {
     try {
@@ -36,8 +42,6 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="p-4">
-      {/* <h1 className="text-2xl font-bold mb-4">Videos</h1> */}
-
       {/* Search Bar */}
       <div className="flex gap-4 mb-4">
         <h1 className="text-2xl font-bold mb-4">Videos</h1>
@@ -58,7 +62,18 @@ const HomePage: React.FC = () => {
           <option value="latest">Latest</option>
           <option value="popular">Most Popular</option>
         </select>
+
+        {/* Sign In Button */}
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="px-4 py-2 bg-blue-500 text-white rounded-md"
+        >
+          Sign In
+        </button>
       </div>
+
+      <SignInModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
 
       {/* Video Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

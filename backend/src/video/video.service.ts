@@ -1,19 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Video } from './video.schema';
+import { User } from '../user/user.schema';
 
 @Injectable()
 export class VideoService {
-    constructor(@InjectModel(Video.name) private videoModel: Model<Video>) { }
+    constructor(
+        @InjectModel(Video.name) private videoModel: Model<Video>,
+        @InjectModel(User.name) private userModel: Model<User>
+    ) { }
 
-    // Create a video
-    async create(videoData: any, userId: string): Promise<Video> {
-        const newVideo = new this.videoModel({ ...videoData, userId });
+    // Add a comment to a video
+    async addComment(videoId: string, commentData: { userId: string; text: string }): Promise<Video> {
+        const { userId, text } = commentData;
+
+        // Fetch user details for the comment
+        const user = await this.userModel.findById(userId).exec();
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        // Fetch the video and update with the new comment
+        const video = await this.videoModel.findById(videoId).exec();
+        if (!video) {
+            throw new NotFoundException('Video not found');
+        }
+
+        const comment = {
+            userId,
+            username: user.username,
+            text,
+            postedAt: new Date(),
+        };
+
+        video.comments.push(comment);
+        return video.save();
+    }
+
+    // Other methods for managing videos
+
+    async uploadVideo(videoData: any, userId: string): Promise<Video> {
+        const { title, url, description, channelName } = videoData;
+
+        // Create the video
+        const newVideo = new this.videoModel({
+            title,
+            url,
+            description,
+            userId,
+            channelName,
+        });
+
         return newVideo.save();
     }
 
-    // Fetch all videos with optional search and sorting
     async findAll(query: string, sort: string): Promise<Video[]> {
         const filter = query ? { title: { $regex: query, $options: 'i' } } : {};
         const sortOptions = sort === 'popular' ? { views: -1 } : { uploadedAt: -1 };
@@ -21,12 +62,10 @@ export class VideoService {
         return this.videoModel.find(filter).sort(sortOptions).exec();
     }
 
-    // Fetch videos by userId
-    async findByUser(userId: string): Promise<Video[]> {
-        return this.videoModel.find({ userId }).exec();
+    async findByChannel(userId: string, channelName: string): Promise<Video[]> {
+        return this.videoModel.find({ userId, channelName }).exec();
     }
 
-    // Increment video views
     async incrementViews(videoId: string): Promise<Video> {
         return this.videoModel.findByIdAndUpdate(
             videoId,
@@ -35,7 +74,6 @@ export class VideoService {
         ).exec();
     }
 
-    // Like a video
     async likeVideo(videoId: string): Promise<Video> {
         return this.videoModel.findByIdAndUpdate(
             videoId,
@@ -44,20 +82,10 @@ export class VideoService {
         ).exec();
     }
 
-    // Dislike a video
     async dislikeVideo(videoId: string): Promise<Video> {
         return this.videoModel.findByIdAndUpdate(
             videoId,
             { $inc: { dislikes: 1 } },
-            { new: true },
-        ).exec();
-    }
-
-    // Add a comment
-    async addComment(videoId: string, comment: { userId: string; text: string }): Promise<Video> {
-        return this.videoModel.findByIdAndUpdate(
-            videoId,
-            { $push: { comments: comment } },
             { new: true },
         ).exec();
     }

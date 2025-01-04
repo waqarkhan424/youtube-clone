@@ -9,6 +9,9 @@ export class UserService {
 
     async createUser(userData: any): Promise<User> {
         const newUser = new this.userModel(userData);
+        if (userData.channelName) {
+            newUser.channels.push(userData.channelName);
+        }
         return newUser.save();
     }
 
