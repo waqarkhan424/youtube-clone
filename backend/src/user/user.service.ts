@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './user.schema';
@@ -31,4 +31,15 @@ export class UserService {
     async findUserById(userId: string): Promise<User> {
         return this.userModel.findById(userId).exec();
     }
+
+
+    async validateUser(email: string, password: string): Promise<User | null> {
+        const user = await this.userModel.findOne({ email }).exec();
+        if (!user || user.password !== password) {
+            throw new UnauthorizedException('Invalid credentials');
+        }
+        return user;
+    }
+
+
 }

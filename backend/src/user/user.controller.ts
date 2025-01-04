@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, UploadedFile, UseInterceptors, UnauthorizedException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
 import { Express } from 'express'; // Import Express types
@@ -22,6 +22,16 @@ export class UserController {
         return this.userService.createUser(userData);
     }
 
+
+
+    @Post('login')
+    async login(@Body() loginData: { email: string; password: string }) {
+        const user = await this.userService.validateUser(loginData.email, loginData.password);
+        if (!user) {
+            throw new UnauthorizedException('Invalid credentials');
+        }
+        return user;
+    }
 
 
     @Get(':id')
