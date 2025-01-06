@@ -41,30 +41,35 @@ export class VideoService {
     // Other methods for managing videos
 
     async uploadVideo(videoData: any, userId: string): Promise<Video> {
-        const { title, url, description, channelName } = videoData;
+        const { title, url, description, thumbnailUrl } = videoData;
 
         // Create the video
         const newVideo = new this.videoModel({
             title,
             url,
             description,
+            thumbnailUrl, // Save thumbnail URL
             userId,
-            channelName,
         });
 
-        return newVideo.save();
+        const savedVideo = await newVideo.save();
+        return savedVideo;
+
     }
 
-    async findAll(query: string, sort: string): Promise<Video[]> {
+
+
+    async findAll(query: string): Promise<Video[]> {
         const filter = query ? { title: { $regex: query, $options: 'i' } } : {};
-        const sortOptions = sort === 'popular' ? { views: -1 } : { uploadedAt: -1 };
-        //@ts-ignore
-        return this.videoModel.find(filter).sort(sortOptions).exec();
+        return this.videoModel.find(filter).exec(); // Removes sorting
     }
 
-    async findByChannel(userId: string, channelName: string): Promise<Video[]> {
-        return this.videoModel.find({ userId, channelName }).exec();
+
+
+    async findByUserId(userId: string): Promise<Video[]> {
+        return this.videoModel.find({ userId }).exec();
     }
+
 
     async incrementViews(videoId: string): Promise<Video> {
         return this.videoModel.findByIdAndUpdate(

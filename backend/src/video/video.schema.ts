@@ -18,9 +18,6 @@ export class Video extends Document {
     @Prop({ required: true })
     userId: string; // ID of the user who uploaded the video
 
-    @Prop({ required: true })
-    channelName: string; // Channel associated with the video
-
     @Prop({ default: 0 })
     views: number;
 
@@ -29,6 +26,9 @@ export class Video extends Document {
 
     @Prop({ default: 0 })
     dislikes: number;
+
+    @Prop({ required: false })
+    thumbnailUrl: string; // New field for thumbnail URL
 
     @Prop({
         type: [

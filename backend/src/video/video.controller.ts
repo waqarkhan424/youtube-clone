@@ -1,5 +1,8 @@
-import { Controller, Post, Get, Patch, Body, Param, Query } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Body, Param, Query, UseInterceptors, UploadedFiles } from '@nestjs/common';
 import { VideoService } from './video.service';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @Controller('videos')
 export class VideoController {
@@ -15,22 +18,78 @@ export class VideoController {
     }
 
     // Upload a video
+
     @Post()
-    async uploadVideo(@Body() videoData: any) {
-        const userId = videoData.userId; // Extract from authentication in production
-        return this.videoService.uploadVideo(videoData, userId);
+    @UseInterceptors(
+        FileFieldsInterceptor(
+            [
+                { name: 'video', maxCount: 1 },
+                { name: 'thumbnail', maxCount: 1 },
+            ],
+            {
+                storage: diskStorage({
+                    destination: (req, file, cb) => {
+                        if (file.fieldname === 'video') {
+                            cb(null, './uploads/videos');
+                        } else if (file.fieldname === 'thumbnail') {
+                            cb(null, './uploads/thumbnails');
+                        }
+                    },
+                    filename: (req, file, callback) => {
+                        const uniqueSuffix =
+                            Date.now() + '-' + Math.round(Math.random() * 1e9);
+                        const ext = extname(file.originalname);
+                        callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+                    },
+                }),
+            },
+        ),
+    )
+    async uploadVideo(
+        @Body() videoData: any,
+        @UploadedFiles() files: {
+            video?: Express.Multer.File[];
+            thumbnail?: Express.Multer.File[];
+        },
+    ) {
+
+
+        const videoFile = files.video?.[0];
+        const thumbnailFile = files.thumbnail?.[0];
+
+        if (!videoFile) {
+            throw new Error('Video file is required.');
+        }
+
+        // Use BACKTICKS for strings!
+        const videoUrl = `/uploads/videos/${videoFile.filename}`;
+        const thumbnailUrl = thumbnailFile
+            ? `/uploads/thumbnails/${thumbnailFile.filename}`
+            : '';
+
+        const userId = videoData.userId;
+        return this.videoService.uploadVideo(
+            {
+                ...videoData,
+                url: videoUrl,
+                thumbnailUrl,
+            },
+            userId,
+        );
     }
+
+
 
     // Fetch all videos
     @Get()
-    async findAll(@Query('q') query: string, @Query('sort') sort: string) {
-        return this.videoService.findAll(query, sort);
+    async findAll(@Query('q') query: string) {
+        return this.videoService.findAll(query);
     }
 
-    // Fetch videos by channel
-    @Get(':userId/:channelName')
-    async findByChannel(@Param('userId') userId: string, @Param('channelName') channelName: string) {
-        return this.videoService.findByChannel(userId, channelName);
+    // Fetch videos by user
+    @Get(':userId')
+    async findByUser(@Param('userId') userId: string) {
+        return this.videoService.findByUserId(userId);
     }
 
     // Increment video views

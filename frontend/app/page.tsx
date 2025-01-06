@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import SignInModal from "@/components/SignInModal";
 import axios from "axios";
 
+
 interface Video {
   _id: string;
   title: string;
   url: string;
+  thumbnailUrl: string;
   description: string;
   views: number;
   likes: number;
@@ -36,7 +38,6 @@ const HomePage: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   // console.log("videos::::::", videos)
   const [searchQuery, setSearchQuery] = useState<string>(""); // State for search query
-  const [sortOption, setSortOption] = useState<string>("latest"); // State for sort option
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null); // State to store logged-in user info
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false); // State for dropdown visibility
@@ -45,7 +46,7 @@ const HomePage: React.FC = () => {
   const fetchVideos = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/videos?q=${searchQuery}&sort=${sortOption}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/videos?q=${searchQuery}`
       );
       setVideos(response.data);
     } catch (error) {
@@ -53,9 +54,14 @@ const HomePage: React.FC = () => {
     }
   };
 
+  // Triggered when the search button is clicked
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      fetchVideos();
+    }
+  };
 
   const handleSignInSuccess = (userData: User) => {
-    console.log("userData:::::::", userData);
     // Save the signed-in user data to localStorage
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData); // Update the state
@@ -82,57 +88,28 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     fetchVideos();
-  }, [searchQuery, sortOption]); // Re-fetch videos when query or sort option changes
+  }, [searchQuery]); // Re-fetch videos when query or sort option changes
 
   return (
     <div className="p-4">
+
       {/* Search Bar */}
-      <div className="flex gap-4 mb-4">
+      {/* <div className="flex gap-4 mb-4"> */}
+      <div className="flex items-center gap-2 mb-4">
         <h1 className="text-2xl font-bold mb-4">Videos</h1>
         <input
           type="text"
-          placeholder="Search videos..."
+          placeholder="Search"
           className="border p-2 rounded-md flex-grow"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-
-        {/* Sort Dropdown */}
-        <select
-          value={sortOption}
-          onChange={(e) => setSortOption(e.target.value)}
-          className="border p-2 rounded-md"
+        <button
+          onClick={handleSearch}
+          className="px-4 py-2 bg-gray-200 rounded-full flex items-center justify-center"
         >
-          <option value="latest">Latest</option>
-          <option value="popular">Most Popular</option>
-        </select>
-
-
-
-        {/* Conditional Render for Sign In Button or Profile Picture */}
-
-        {/* {user ? (
-          <img
-            src={
-              user.channels?.[0]?.profilePic
-                ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/uploads/${user.channels[0].profilePic}`
-                : "/default-profile.png" // Provide a fallback profile picture if none exists
-            }
-            alt={`${user.username}'s profile`}
-            className="w-10 h-10 rounded-full border"
-          />
-        ) : (
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md"
-          >
-            Sign In
-          </button>
-        )}
- */}
-
-
-
+          🔍
+        </button>
 
 
         {/* Conditional Render for Sign In Button or Profile Picture */}
@@ -141,7 +118,7 @@ const HomePage: React.FC = () => {
             <img
               src={
                 user.channels?.[0]?.profilePic
-                  ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/uploads/${user.channels[0].profilePic}`
+                  ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${user.channels[0].profilePic}`
                   : "/default-profile.png" // Provide a fallback profile picture if none exists
               }
               alt={`${user.username}'s profile`}
@@ -155,7 +132,7 @@ const HomePage: React.FC = () => {
                   <img
                     src={
                       user.channels?.[0]?.profilePic
-                        ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/uploads/${user.channels[0].profilePic}`
+                        ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${user.channels[0].profilePic}`
                         : "/default-profile.png"
                     }
                     alt="Profile"
@@ -212,10 +189,9 @@ const HomePage: React.FC = () => {
             key={video._id}
             title={video.title}
             url={video.url}
-            description={video.description}
             views={video.views}
-            likes={video.likes}
             uploadedAt={video.uploadedAt}
+            thumbnailUrl={video.thumbnailUrl}
           />
         ))}
       </div>
