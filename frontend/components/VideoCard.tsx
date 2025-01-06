@@ -1,4 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 import { formatDistance } from 'date-fns';
+
 
 interface VideoCardProps {
     title: string;
@@ -9,11 +11,39 @@ interface VideoCardProps {
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({ title, url, thumbnailUrl, views, uploadedAt }) => {
+    const [duration, setDuration] = useState<string>(""); // State to store video duration
+    const videoRef = useRef<HTMLVideoElement>(null); // Reference to the video element
 
     const formatTimeAgo = (date: string) => {
         const formatted = formatDistance(new Date(date), new Date(), { addSuffix: true });
         return formatted.replace(/^about\s/, ''); // Remove "about" if present
     };
+
+
+    useEffect(() => {
+        const videoElement = videoRef.current;
+        if (videoElement) {
+            const handleLoadedMetadata = () => {
+                const totalSeconds = Math.floor(videoElement.duration);
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                setDuration(`${minutes}:${seconds.toString().padStart(2, "0")}`);
+            };
+
+            // Add event listener for metadata loaded
+            videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+            return () => {
+                // Cleanup event listener
+                videoElement.removeEventListener(
+                    "loadedmetadata",
+                    handleLoadedMetadata
+                );
+            };
+        }
+    }, []);
+
+
 
     return (
         <div className="max-w-xs">
@@ -27,16 +57,21 @@ const VideoCard: React.FC<VideoCardProps> = ({ title, url, thumbnailUrl, views, 
                 />
                 {/* Video Preview */}
                 <video
+                    ref={videoRef}
+                    controls
                     muted
                     loop
                     className="absolute top-0 left-0 w-full h-48 object-cover rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 >
                     <source src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${url}`} type="video/mp4" />
                 </video>
+
+                {/* Display Actual Video Duration */}
                 <span className="absolute bottom-2 right-2 bg-black bg-opacity-75 text-white text-xs px-1.5 py-0.5 rounded">
-                    9:31
+                    {duration || "Loading..."}
                 </span>
             </div>
+
 
             {/* Video Info */}
             <div className="flex mt-2 gap-2 items-start">

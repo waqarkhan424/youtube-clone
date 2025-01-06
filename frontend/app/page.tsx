@@ -94,7 +94,6 @@ const HomePage: React.FC = () => {
     <div className="p-4">
 
       {/* Search Bar */}
-      {/* <div className="flex gap-4 mb-4"> */}
       <div className="flex items-center gap-2 mb-4">
         <h1 className="text-2xl font-bold mb-4">Videos</h1>
         <input
@@ -178,9 +177,6 @@ const HomePage: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         onSignInSuccess={handleSignInSuccess} // Pass the callback for successful sign-in
       />
-
-
-
 
       {/* Video Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

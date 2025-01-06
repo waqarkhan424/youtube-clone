@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import VideoCard from "@/components/VideoCard";
 import axios from "axios";
 
 interface Video {
@@ -57,9 +58,6 @@ const ChannelDashboard: React.FC = () => {
         formData.append("description", description);
         formData.append("userId", userId);
 
-        // for (let [key, value] of formData.entries()) {
-        //     console.log(`${key}:`, value);
-        // }
 
         try {
             const response = await axios.post(
@@ -69,8 +67,6 @@ const ChannelDashboard: React.FC = () => {
                     headers: { "Content-Type": "multipart/form-data" },
                 }
             );
-            // console.log("Upload response::::::::::", response.data);
-
             alert("Video uploaded successfully!");
             fetchUserVideos();
         } catch (error) {
@@ -124,23 +120,14 @@ const ChannelDashboard: React.FC = () => {
             <h2 className="text-xl font-semibold mb-4">Your Videos</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {videos.map((video) => (
-                    <div key={video._id} className="border p-4 rounded-md shadow-md">
-                        <img
-                            src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${video.thumbnailUrl}`}
-                            alt={video.title}
-                            className="w-full h-48 object-cover rounded-md mb-2"
-                        />
-                        <video controls className="w-full rounded-md">
-                            <source src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${video.url}`} type="video/mp4" />
-                        </video>
-                        <h3 className="text-lg font-semibold mt-2">{video.title}</h3>
-                        <p className="text-sm text-gray-600">{video.description}</p>
-                        <div className="text-sm text-gray-500 mt-2">
-                            <p>{video.views} views</p>
-                            <p>{video.likes} likes</p>
-                            <p>Uploaded on {new Date(video.uploadedAt).toLocaleDateString()}</p>
-                        </div>
-                    </div>
+                    <VideoCard
+                        key={video._id}
+                        title={video.title}
+                        url={video.url}
+                        views={video.views}
+                        uploadedAt={video.uploadedAt}
+                        thumbnailUrl={video.thumbnailUrl}
+                    />
                 ))}
             </div>
         </div>

@@ -61,7 +61,7 @@ export class VideoService {
 
     async findAll(query: string): Promise<Video[]> {
         const filter = query ? { title: { $regex: query, $options: 'i' } } : {};
-        return this.videoModel.find(filter).exec(); // Removes sorting
+        return this.videoModel.find(filter).exec();
     }
 
 
