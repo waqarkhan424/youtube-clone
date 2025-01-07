@@ -36,6 +36,7 @@ export class UserController {
     @Post('login')
     async login(@Body() loginData: { email: string; password: string }) {
         const user = await this.userService.validateUser(loginData.email, loginData.password);
+        console.log("user:::::::", user)
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }

@@ -8,6 +8,7 @@ export class UserService {
     constructor(@InjectModel(User.name) private userModel: Model<User>) { }
 
     async createUser(userData: any): Promise<User> {
+        console.log("userData:::::::::", userData)
         const { username, email, password, channelName, description, profilePic } = userData;
 
         // Create a new user with channel details
