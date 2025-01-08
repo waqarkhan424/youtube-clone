@@ -164,27 +164,15 @@
 "use server"
 
 import VideoPage from "./components/video/VideoPage";
+import { fetch_getInitialVideos } from "./actions/fetch_getInitialVideos";
 
 export const metadata = {
   title: "YouTube Clone",
   description: "Discover videos",
 };
 
-async function fetchInitialVideos() {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/videos`, {
-    cache: "no-store", // Optional: Prevent caching for fresh data
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch videos");
-  }
-
-  return response.json();
-
-}
-
 export default async function Page() {
-  const initialVideos = await fetchInitialVideos();
+  const initialVideos = await fetch_getInitialVideos();
 
   return (
     <div className="p-4">
