@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import Modal from "../shared/Modal";
 import FormInput from "../shared/FormInput";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface User {
     username: string;
@@ -27,6 +28,7 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onSignInSucc
     const [description, setDescription] = useState("");
     const [profilePic, setProfilePic] = useState<File | null>(null);
 
+    const queryClient = useQueryClient();
 
 
     const resetForm = () => {
@@ -39,53 +41,52 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onSignInSucc
     };
 
 
-    const handleSubmit = async () => {
-        try {
-            const url = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users${isSignUp ? "" : "/login"
-                }`;
+    // Mutation for handling login or sign-up
+    const mutation = useMutation({
+        mutationFn: async (formData: FormData | { email: string; password: string }) => {
+            const url = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users${isSignUp ? "" : "/login"}`;
+            const config = isSignUp
+                ? { headers: { "Content-Type": "multipart/form-data" } }
+                : { headers: { "Content-Type": "application/json" } };
 
-            let response;
+            const response = await axios.post(url, formData, config);
+            return response.data;
+        },
+        onSuccess: (data) => {
+            onSignInSuccess(data); // Call success handler
+            queryClient.invalidateQueries({ queryKey: ["user"] }); // Invalidate user queries if cached
+            resetForm(); // Reset form
+            onClose(); // Close modal
+        },
+        onError: (error) => {
+            console.error("Error during authentication:", error);
+        },
+    });
 
-            if (isSignUp) {
-                // For SignUp
-                const formData = new FormData();
-                formData.append("username", username);
-                formData.append("email", email);
-                formData.append("password", password);
-                formData.append("channelName", channelName);
-                formData.append("description", description);
 
-                if (profilePic) {
-                    formData.append("profilePic", profilePic);
-                }
+    const handleSubmit = () => {
+        if (!email.trim() || !password.trim()) {
+            alert("Please provide both email and password.");
+            return;
+        }
 
-                response = await axios.post(url, formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                });
-            } else {
-                // For Login
-                const data = {
-                    email,
-                    password,
-                };
+        if (isSignUp) {
+            const formData = new FormData();
+            formData.append("username", username);
+            formData.append("email", email);
+            formData.append("password", password);
+            formData.append("channelName", channelName);
+            formData.append("description", description);
 
-                response = await axios.post(url, data, {
-                    headers: {
-                        "Content-Type": "application/json", // Set Content-Type explicitly for JSON
-                    },
-                });
+            if (profilePic) {
+                formData.append("profilePic", profilePic);
             }
 
-            onSignInSuccess(response.data);
-            resetForm(); // Reset the form after a successful submission
-            onClose();
-        } catch (error) {
-            console.error("Error:", error);
+            mutation.mutate(formData); // Trigger mutation for sign-up
+        } else {
+            mutation.mutate({ email, password }); // Trigger mutation for login
         }
     };
-
 
 
     // Close modal and reset form

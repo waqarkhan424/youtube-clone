@@ -1,7 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import VideoList from "./components/VideoList";
 import VideoUploadForm from "./components/VideoUploadForm";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import Loader from "@/components/shared/Loader";
 import axios from "axios";
 
 
@@ -17,27 +19,58 @@ interface Video {
 }
 
 
+
+const fetchUserVideos = async (): Promise<Video[]> => {
+    const userId = JSON.parse(localStorage.getItem("user") || "{}")._id;
+    const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/videos/${userId}`
+    );
+    return response.data;
+};
+
+const uploadVideo = async (formData: FormData): Promise<void> => {
+    await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/videos`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+};
+
+
+
+
 const ChannelDashboard: React.FC = () => {
-    const [videos, setVideos] = useState<Video[]>([]);
     const [video, setVideo] = useState<File | null>(null);
     const [thumbnail, setThumbnail] = useState<File | null>(null);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
-    const fetchUserVideos = async () => {
-        try {
-            const userId = JSON.parse(localStorage.getItem("user") || "{}")._id;
+    const queryClient = useQueryClient();
 
-            const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/videos/${userId}`
-            );
-            setVideos(response.data);
-        } catch (error) {
-            console.error("Error fetching user videos:", error);
-        }
-    };
+    // Fetch user videos using React Query
+    const { data: videos = [], isLoading } = useQuery({
+        queryKey: ["userVideos"],
+        queryFn: fetchUserVideos,
+    });
 
-    const handleVideoUpload = async () => {
+
+    // Mutation for uploading videos
+    const mutation = useMutation({
+        mutationFn: uploadVideo,
+        onSuccess: () => {
+            // Reset form fields
+            setVideo(null);
+            setThumbnail(null);
+            setTitle("");
+            setDescription("");
+            queryClient.invalidateQueries({ queryKey: ["userVideos"] }); // Refresh the video list
+            alert("Video uploaded successfully!");
+        },
+        onError: () => {
+            alert("Failed to upload video. Please try again.");
+        },
+    });
+
+
+    const handleVideoUpload = () => {
         if (!video) {
             alert("Please select a video file to upload.");
             return;
@@ -49,7 +82,6 @@ const ChannelDashboard: React.FC = () => {
         }
 
         const userId = JSON.parse(localStorage.getItem("user") || "{}")._id;
-
         const formData = new FormData();
         formData.append("video", video);
         if (thumbnail) {
@@ -59,25 +91,10 @@ const ChannelDashboard: React.FC = () => {
         formData.append("description", description);
         formData.append("userId", userId);
 
-        try {
-            await axios.post(
-                `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/videos`,
-                formData,
-                {
-                    headers: { "Content-Type": "multipart/form-data" },
-                }
-            );
-            alert("Video uploaded successfully!");
-            fetchUserVideos();
-        } catch (error) {
-            console.error("Error uploading video:", error);
-            alert("Failed to upload video. Please try again.");
-        }
+        mutation.mutate(formData);
+
     };
 
-    useEffect(() => {
-        fetchUserVideos();
-    }, []);
 
     return (
         <div className="p-4">
@@ -94,7 +111,11 @@ const ChannelDashboard: React.FC = () => {
                 onUpload={handleVideoUpload}
             />
             <h2 className="text-xl font-semibold mb-4">Your Videos</h2>
-            <VideoList videos={videos} />
+            {isLoading ? (
+                <Loader />
+            ) : (
+                <VideoList videos={videos} />
+            )}
         </div>
     );
 };
