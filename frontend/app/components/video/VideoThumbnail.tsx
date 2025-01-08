@@ -11,21 +11,6 @@ const VideoThumbnail: React.FC<VideoThumbnailProps> = ({ thumbnailUrl, videoUrl,
     const [duration, setDuration] = useState<string>("");
     const videoRef = useRef<HTMLVideoElement>(null);
 
-    // useEffect(() => {
-    //     const videoElement = videoRef.current;
-    //     if (videoElement) {
-    //         const handleLoadedMetadata = () => {
-    //             const minutes = Math.floor(videoElement.duration / 60);
-    //             const seconds = Math.floor(videoElement.duration % 60);
-    //             setDuration(`${minutes}:${seconds < 10 ? "0" : ""}${seconds}`);
-    //         };
-    //         videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
-    //         return () => videoElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
-    //     }
-    // }, []);
-
-
-
     useEffect(() => {
         const videoElement = videoRef.current;
 

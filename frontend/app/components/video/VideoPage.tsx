@@ -2,10 +2,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import VideoCard from "./VideoCard";
-import SearchBar from "@/components/search/SearchBar"; // Refactored SearchBar
+import SearchBar from "@/components/search/SearchBar";
 import SignInModal from "@/components/auth/SignInModal";
-import UserDropdown from "@/components/dropdown/UserDropdown"; // New UserDropdown
-import Loader from "@/components/shared/Loader"; // New Loader
+import UserDropdown from "@/components/dropdown/UserDropdown";
+import Loader from "@/components/shared/Loader";
 import axios from "axios";
 
 interface Video {
@@ -35,8 +35,6 @@ const fetchVideos = async (searchQuery: string) => {
 };
 
 
-
-
 export default function VideoPage({ initialVideos }: Props) {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -48,15 +46,11 @@ export default function VideoPage({ initialVideos }: Props) {
         queryFn: () => fetchVideos(searchQuery),
         initialData: initialVideos,
         // enabled: false, // Disable automatic fetching
-        // enabled: !!searchQuery, // Only fetch if searchQuery is not empty
-
     });
 
     // const handleSearch = () => {
     //   refetch();
     // };
-
-
 
     const handleSignInSuccess = (userData: User) => {
         localStorage.setItem("user", JSON.stringify(userData));
@@ -79,14 +73,12 @@ export default function VideoPage({ initialVideos }: Props) {
 
 
     return (
-        // <div>
         <div className="p-4">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">Videos</h1>
 
                 {/* Search Bar */}
                 <div className="flex-grow max-w-lg">
-
                     <SearchBar
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -97,7 +89,6 @@ export default function VideoPage({ initialVideos }: Props) {
                 </div>
 
                 {/* User Profile or Sign-In */}
-
                 <div>
                     {user ? (
                         <UserDropdown user={user} onSignOut={handleSignOut} />
