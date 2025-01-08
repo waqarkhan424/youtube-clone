@@ -1,7 +1,5 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-////////
-
 import { useEffect, useState } from "react";
 import VideoCard from "./VideoCard";
 import SearchBar from "@/components/search/SearchBar"; // Refactored SearchBar
@@ -81,30 +79,40 @@ export default function VideoPage({ initialVideos }: Props) {
 
 
     return (
-        <div>
-            <SearchBar
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                // onSearch={fetchVideos}
-                // onSearch={() => refetch()} // Fetch on button press
-                onSearch={() => { }}
-            />
+        // <div>
+        <div className="p-4">
+            <div className="flex justify-between items-center mb-4">
+                <h1 className="text-2xl font-bold">Videos</h1>
 
-            {/* User Profile or Sign-In */}
+                {/* Search Bar */}
+                <div className="flex-grow max-w-lg">
 
-            <div>
-                {user ? (
-                    <UserDropdown user={user} onSignOut={handleSignOut} />
-                ) : (
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                    <SearchBar
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        // onSearch={fetchVideos}
+                        // onSearch={() => refetch()} // Fetch on button press
+                        onSearch={() => { }}
+                    />
+                </div>
 
-                    >
-                        Sign In
-                    </button>
-                )}
+                {/* User Profile or Sign-In */}
+
+                <div>
+                    {user ? (
+                        <UserDropdown user={user} onSignOut={handleSignOut} />
+                    ) : (
+                        <button
+                            onClick={() => setIsModalOpen(true)}
+                            className="px-4 py-2 bg-blue-500 text-white rounded-md"
+
+                        >
+                            Sign In
+                        </button>
+                    )}
+                </div>
             </div>
+
 
             {/* Sign-In Modal */}
             <SignInModal

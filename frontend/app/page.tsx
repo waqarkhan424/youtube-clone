@@ -161,7 +161,6 @@
 
 
 ////////////////////////////////////////////
-"use server"
 
 import VideoPage from "./components/video/VideoPage";
 import { fetch_getInitialVideos } from "./actions/fetch_getInitialVideos";
@@ -175,11 +174,18 @@ export default async function Page() {
   const initialVideos = await fetch_getInitialVideos();
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Videos</h1>
-      {/* Pass initial data to the client-side component */}
+    // <div className="p-4">
+    //   <h1 className="text-2xl font-bold mb-4">Videos</h1>
+    //   {/* Pass initial data to the client-side component */}
+    //   <VideoPage initialVideos={initialVideos} />
+    // </div>
+    <div>
       <VideoPage initialVideos={initialVideos} />
-    </div>
 
+    </div>
   );
 }
+
+
+
+
