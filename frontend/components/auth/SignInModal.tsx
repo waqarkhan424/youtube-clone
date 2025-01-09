@@ -19,7 +19,7 @@ interface User {
 
 interface SignInModalProps {
     isOpen: boolean;
-    onClose?: () => void;
+    onClose: () => void;
     onSignInSuccess?: (user: User) => void; // Make it optional
 
 }
@@ -63,22 +63,22 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onSignInSucc
             //     onSignInSuccess(data); // Call only if it's provided
             // }
 
+            console.log("data:::::::::", data)
 
 
             if (data.token) {
-                console.log("data:::::::::", data)
                 console.log("data.token:::::::::", data.token)
                 localStorage.setItem("authToken", data.token); // Save token
             }
-            if (onSignInSuccess) {
-                onSignInSuccess(data); // Call only if it's provided
-            }
+            // if (onSignInSuccess) {
+            //     onSignInSuccess(data); // Call only if it's provided
+            // }
 
 
 
             queryClient.invalidateQueries({ queryKey: ["user"] }); // Invalidate user queries if cached
-            // resetForm(); // Reset form
-            // onClose(); // Close modal
+            resetForm(); // Reset form
+            onClose(); // Close modal
         },
         onError: (error) => {
             console.error("Error during authentication:", error);
@@ -112,14 +112,13 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onSignInSucc
 
 
     // Close modal and reset form
-    // const handleClose = () => {
-    //     resetForm();
-    //     onClose();
-    // };
+    const handleClose = () => {
+        resetForm();
+        onClose();
+    };
 
     return (
-        // <Modal isOpen={isOpen} onClose={handleClose}>
-        <Modal isOpen={isOpen} >
+        <Modal isOpen={isOpen} onClose={handleClose}>
             <h2 className="text-xl font-bold mb-4">{isSignUp ? "Sign Up" : "Login"}</h2>
             <div className="flex flex-col gap-2">
                 {isSignUp && (

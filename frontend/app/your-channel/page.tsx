@@ -22,6 +22,7 @@ interface Video {
 
 const fetchUserVideos = async (): Promise<Video[]> => {
     const userId = JSON.parse(localStorage.getItem("user") || "{}")._id;
+    console.log("userId:::::::::", userId)
     const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/videos/${userId}`
     );

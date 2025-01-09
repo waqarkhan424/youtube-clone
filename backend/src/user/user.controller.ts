@@ -53,7 +53,17 @@ export class UserController {
         if (profilePic) {
             userData.profilePic = `/uploads/profile-pics/${profilePic.filename}`; // Store the full path
         }
-        return this.userService.createUser(userData);
+        // return this.userService.createUser(userData);
+
+        // Create the user in the database
+        const newUser = await this.userService.createUser(userData);
+
+        // Generate a JWT token for the newly created user
+        const token = this.jwtService.sign({ sub: newUser._id, email: newUser.email });
+
+        // Return the user details along with the token
+        return { user: newUser, token };
+
     }
 
 

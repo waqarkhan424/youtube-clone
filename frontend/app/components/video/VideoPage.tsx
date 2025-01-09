@@ -71,7 +71,7 @@ export default function VideoPage({ initialVideos }: Props) {
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     });
 
-
+    console.log("user::::::::::", user)
 
     const handleSignOut = () => {
         localStorage.removeItem("authToken"); // Remove token
@@ -143,18 +143,9 @@ export default function VideoPage({ initialVideos }: Props) {
             {/* Sign-In Modal */}
             <SignInModal
                 isOpen={isModalOpen}
-            // onClose={() => setIsModalOpen(false)}
+                onClose={() => setIsModalOpen(false)}
             // onSignInSuccess={handleSignInSuccess}
 
-            // onSignInSuccess={(user) => {
-            //     console.log("User signed in:", user);
-            //     // Perform any additional actions like setting user in state or localStorage if needed
-            // }}
-
-            // onSignInSuccess={(userData) => {
-            //     localStorage.setItem("authToken", userData.token); // Save token
-            //     window.location.reload();
-            // }}
 
             // onSignInSuccess={(userData: User) => {
             //     localStorage.setItem("authToken", userData.token); // Save token
