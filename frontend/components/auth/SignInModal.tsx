@@ -11,7 +11,11 @@ interface User {
     profilePic?: string;
     channelName?: string;
     description?: string;
+    token: string; // Add token property
 }
+
+
+
 
 interface SignInModalProps {
     isOpen: boolean;

@@ -25,6 +25,8 @@ interface User {
     username: string;
     email: string;
     profilePic?: string;
+    token: string; // Add token property
+
 }
 
 const fetchVideos = async (searchQuery: string) => {
@@ -36,8 +38,14 @@ const fetchVideos = async (searchQuery: string) => {
 
 
 const fetchUser = async () => {
+    const token = localStorage.getItem("authToken"); // Ensure the token is stored in localStorage
+    if (!token) throw new Error("No authentication token found");
+
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users/me`, {
         withCredentials: true, // Ensure cookies are sent
+        headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the request
+        },
     });
     return response.data;
 };
@@ -65,6 +73,8 @@ export default function VideoPage({ initialVideos }: Props) {
 
 
     const handleSignOut = () => {
+        localStorage.removeItem("authToken"); // Remove token
+
         axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/logout`, {}, { withCredentials: true })
             .then(() => {
                 window.location.reload();
@@ -135,10 +145,21 @@ export default function VideoPage({ initialVideos }: Props) {
                 onClose={() => setIsModalOpen(false)}
                 // onSignInSuccess={handleSignInSuccess}
 
-                onSignInSuccess={(user) => {
-                    console.log("User signed in:", user);
-                    // Perform any additional actions like setting user in state or localStorage if needed
+                // onSignInSuccess={(user) => {
+                //     console.log("User signed in:", user);
+                //     // Perform any additional actions like setting user in state or localStorage if needed
+                // }}
+
+                // onSignInSuccess={(userData) => {
+                //     localStorage.setItem("authToken", userData.token); // Save token
+                //     window.location.reload();
+                // }}
+
+                onSignInSuccess={(userData: User) => {
+                    localStorage.setItem("authToken", userData.token); // Save token
+                    window.location.reload();
                 }}
+
             />
 
             {/* Video Grid */}
