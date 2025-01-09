@@ -5,13 +5,17 @@ import { extname } from 'path';
 import { UserService } from './user.service';
 import { Express } from 'express'; // Import Express types
 import { AuthGuard } from '@nestjs/passport'; // Assuming you are using Passport.js for authentication
+import { JwtService } from '@nestjs/jwt';
 
 
 @Controller('users')
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+    // constructor(private readonly userService: UserService) { }
 
-
+    constructor(
+        private readonly userService: UserService,
+        private readonly jwtService: JwtService, // Inject JwtService
+    ) { }
 
 
     @UseGuards(AuthGuard('jwt')) // Use JWT authentication guard
@@ -53,17 +57,26 @@ export class UserController {
     }
 
 
+    // @Post('login')
+    // async login(@Body() loginData: { email: string; password: string }) {
+    //     const user = await this.userService.validateUser(loginData.email, loginData.password);
+    //     console.log("user:::::::", user)
+    //     if (!user) {
+    //         throw new UnauthorizedException('Invalid credentials');
+    //     }
+    //     return user;
+    // }
+
     @Post('login')
     async login(@Body() loginData: { email: string; password: string }) {
         const user = await this.userService.validateUser(loginData.email, loginData.password);
-        console.log("user:::::::", user)
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }
-        return user;
+
+        const token = this.jwtService.sign({ sub: user.id, email: user.email });
+        return { user, token }; // Return both user info and token
     }
-
-
 
 
 
