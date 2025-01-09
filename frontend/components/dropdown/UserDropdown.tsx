@@ -26,7 +26,6 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user, onSignOut }) => {
         <div className="relative">
             <img
                 src={
-                    // user.profilePic
                     user.channels?.[0]?.profilePic
                         ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${user.channels[0].profilePic}`
                         : "/default-profile.png"

@@ -16,7 +16,8 @@ interface User {
 interface SignInModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSignInSuccess: (user: User) => void;
+    onSignInSuccess?: (user: User) => void; // Make it optional
+
 }
 
 const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onSignInSuccess }) => {
@@ -53,7 +54,9 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onSignInSucc
             return response.data;
         },
         onSuccess: (data) => {
-            onSignInSuccess(data); // Call success handler
+            if (onSignInSuccess) {
+                onSignInSuccess(data); // Call only if it's provided
+            }
             queryClient.invalidateQueries({ queryKey: ["user"] }); // Invalidate user queries if cached
             resetForm(); // Reset form
             onClose(); // Close modal

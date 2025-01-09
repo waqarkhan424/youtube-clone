@@ -1,13 +1,33 @@
-import { Controller, Post, Get, Body, Param, UploadedFile, UseInterceptors, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Get, Req, UseGuards, Body, Param, UploadedFile, UseInterceptors, UnauthorizedException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { UserService } from './user.service';
 import { Express } from 'express'; // Import Express types
+import { AuthGuard } from '@nestjs/passport'; // Assuming you are using Passport.js for authentication
+
 
 @Controller('users')
 export class UserController {
     constructor(private readonly userService: UserService) { }
+
+
+
+
+    @UseGuards(AuthGuard('jwt')) // Use JWT authentication guard
+    @Get('me')
+    async getCurrentUser(@Req() req: any) {
+        const userId = req.user?.id; // `req.user` will be populated by the guard
+        if (!userId) {
+            throw new UnauthorizedException('User not authenticated');
+        }
+        return this.userService.findUserById(userId);
+    }
+
+
+
+
+
 
     @Post()
     @UseInterceptors(

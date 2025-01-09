@@ -4,6 +4,9 @@ import { MulterModule } from '@nestjs/platform-express';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { User, UserSchema } from './user.schema';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from 'src/auth/jwt.strategy';
 
 @Module({
     imports: [
@@ -11,9 +14,16 @@ import { User, UserSchema } from './user.schema';
         MulterModule.register({
             dest: './uploads', // Save uploaded files in the "uploads" folder
         }),
+
+        PassportModule.register({ defaultStrategy: 'jwt' }), // Add Passport.js support
+        JwtModule.register({
+            secret: process.env.JWT_SECRET, // Use your secret key
+            signOptions: { expiresIn: '1h' },
+        }),
+
     ],
     controllers: [UserController],
-    providers: [UserService],
+    providers: [UserService, JwtStrategy], // Include JwtStrategy
     exports: [UserService], // Export the service if needed in other modules
 })
 export class UserModule { }

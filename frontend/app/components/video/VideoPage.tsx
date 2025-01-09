@@ -35,10 +35,17 @@ const fetchVideos = async (searchQuery: string) => {
 };
 
 
+const fetchUser = async () => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users/me`, {
+        withCredentials: true, // Ensure cookies are sent
+    });
+    return response.data;
+};
+
 export default function VideoPage({ initialVideos }: Props) {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [user, setUser] = useState<User | null>(null);
+    // const [user, setUser] = useState<User | null>(null);
 
 
     const { data: videos = initialVideos, isLoading, refetch } = useQuery({
@@ -48,27 +55,44 @@ export default function VideoPage({ initialVideos }: Props) {
         // enabled: false, // Disable automatic fetching
     });
 
+    // Fetch user using React Query
+    const { data: user, isError, isLoading: isUserLoading } = useQuery({
+        queryKey: ["user"],
+        queryFn: fetchUser,
+        staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    });
+
+
+
+    const handleSignOut = () => {
+        axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/logout`, {}, { withCredentials: true })
+            .then(() => {
+                window.location.reload();
+            });
+    };
+
+
     // const handleSearch = () => {
     //   refetch();
     // };
 
-    const handleSignInSuccess = (userData: User) => {
-        localStorage.setItem("user", JSON.stringify(userData));
-        setUser(userData);
-        setIsModalOpen(false);
-    };
+    // const handleSignInSuccess = (userData: User) => {
+    //     localStorage.setItem("user", JSON.stringify(userData));
+    //     setUser(userData);
+    //     setIsModalOpen(false);
+    // };
 
-    const handleSignOut = () => {
-        localStorage.removeItem("user");
-        setUser(null);
-    };
+    // const handleSignOut = () => {
+    //     localStorage.removeItem("user");
+    //     setUser(null);
+    // };
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-    }, []);
+    // useEffect(() => {
+    //     const storedUser = localStorage.getItem("user");
+    //     if (storedUser) {
+    //         setUser(JSON.parse(storedUser));
+    //     }
+    // }, []);
 
 
 
@@ -109,7 +133,12 @@ export default function VideoPage({ initialVideos }: Props) {
             <SignInModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                onSignInSuccess={handleSignInSuccess}
+                // onSignInSuccess={handleSignInSuccess}
+
+                onSignInSuccess={(user) => {
+                    console.log("User signed in:", user);
+                    // Perform any additional actions like setting user in state or localStorage if needed
+                }}
             />
 
             {/* Video Grid */}
