@@ -1,12 +1,28 @@
-import { Controller, Post, Get, Patch, Body, Param, Query, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Controller, Post, Get, UseGuards, Req, Patch, Body, Param, Query, UseInterceptors, UploadedFiles } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { AuthGuard } from '@nestjs/passport';
+
 
 @Controller('videos')
 export class VideoController {
     constructor(private readonly videoService: VideoService) { }
+
+
+
+
+
+    // Fetch videos for the logged-in user
+    // @UseGuards(AuthGuard('jwt'))
+    // @Get('my-videos')
+    // async findMyVideos(@Req() req: any) {
+    //     const userId = req.user.id; // Extract user ID from JWT
+    //     return this.videoService.findByUserId(userId);
+    // }
+
+
 
     // Add a comment to a video
     @Post(':id/comment')
@@ -18,6 +34,8 @@ export class VideoController {
     }
 
     // Upload a video
+    // @UseGuards(AuthGuard('jwt'))
+
 
     @Post()
     @UseInterceptors(
@@ -28,11 +46,11 @@ export class VideoController {
             ],
             {
                 storage: diskStorage({
-                    destination: (req, file, cb) => {
+                    destination: (req, file, callback) => {
                         if (file.fieldname === 'video') {
-                            cb(null, './uploads/videos');
+                            callback(null, './uploads/videos');
                         } else if (file.fieldname === 'thumbnail') {
-                            cb(null, './uploads/thumbnails');
+                            callback(null, './uploads/thumbnails');
                         }
                     },
                     filename: (req, file, callback) => {
@@ -46,6 +64,8 @@ export class VideoController {
         ),
     )
     async uploadVideo(
+        // @Req() req: any,
+
         @Body() videoData: any,
         @UploadedFiles() files: {
             video?: Express.Multer.File[];
@@ -53,6 +73,7 @@ export class VideoController {
         },
     ) {
 
+        // const userId = req.user.id; // Get the authenticated user's ID
 
         const videoFile = files.video?.[0];
         const thumbnailFile = files.thumbnail?.[0];
