@@ -53,34 +53,19 @@ export class UserController {
     }
 
 
-    // @Post('login')
-    // async login(@Body() loginData: { email: string; password: string }) {
-    //     const user = await this.userService.validateUser(loginData.email, loginData.password);
-    //     console.log("user:::::::", user)
-    //     if (!user) {
-    //         throw new UnauthorizedException('Invalid credentials');
-    //     }
-    //     return user;
-    // }
-
-
-
-
     @Post('login')
     async login(@Body() loginData: { email: string; password: string }) {
         const user = await this.userService.validateUser(loginData.email, loginData.password);
+        console.log("user:::::::", user)
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }
-
-        // Generate JWT token (example code)
-        const token = this.authService.generateJwtToken(user); // Ensure this returns a valid JWT
-
-        return {
-            ...user,
-            token, // Include the token in the response
-        };
+        return user;
     }
+
+
+
+
 
 
 
