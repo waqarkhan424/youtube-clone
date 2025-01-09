@@ -14,14 +14,6 @@ export class VideoController {
 
 
 
-    // Fetch videos for the logged-in user
-    // @UseGuards(AuthGuard('jwt'))
-    // @Get('my-videos')
-    // async findMyVideos(@Req() req: any) {
-    //     const userId = req.user.id; // Extract user ID from JWT
-    //     return this.videoService.findByUserId(userId);
-    // }
-
 
 
     // Add a comment to a video
@@ -34,9 +26,6 @@ export class VideoController {
     }
 
     // Upload a video
-    // @UseGuards(AuthGuard('jwt'))
-
-
     @Post()
     @UseInterceptors(
         FileFieldsInterceptor(
@@ -64,8 +53,6 @@ export class VideoController {
         ),
     )
     async uploadVideo(
-        // @Req() req: any,
-
         @Body() videoData: any,
         @UploadedFiles() files: {
             video?: Express.Multer.File[];
@@ -73,7 +60,6 @@ export class VideoController {
         },
     ) {
 
-        // const userId = req.user.id; // Get the authenticated user's ID
 
         const videoFile = files.video?.[0];
         const thumbnailFile = files.thumbnail?.[0];

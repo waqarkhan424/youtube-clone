@@ -5,26 +5,14 @@ import Modal from "../shared/Modal";
 import FormInput from "../shared/FormInput";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface User {
-    username: string;
-    email: string;
-    profilePic?: string;
-    channelName?: string;
-    description?: string;
-    token: string; // Add token property
-}
-
-
-
 
 interface SignInModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSignInSuccess?: (user: User) => void; // Make it optional
 
 }
 
-const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onSignInSuccess }) => {
+const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => {
     const [isSignUp, setIsSignUp] = useState(true);
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -55,26 +43,13 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onSignInSucc
                 : { headers: { "Content-Type": "application/json" } };
 
             const response = await axios.post(url, formData, config);
-            console.log("response.data:::88::::", response.data)
             return response.data;
         },
         onSuccess: (data) => {
-            // if (onSignInSuccess) {
-            //     onSignInSuccess(data); // Call only if it's provided
-            // }
-
-            console.log("data:::::::::", data)
-
 
             if (data.token) {
-                console.log("data.token:::::::::", data.token)
                 localStorage.setItem("authToken", data.token); // Save token
             }
-            // if (onSignInSuccess) {
-            //     onSignInSuccess(data); // Call only if it's provided
-            // }
-
-
 
             queryClient.invalidateQueries({ queryKey: ["user"] }); // Invalidate user queries if cached
             resetForm(); // Reset form

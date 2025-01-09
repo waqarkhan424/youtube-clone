@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import VideoCard from "./VideoCard";
 import SearchBar from "@/components/search/SearchBar";
 import SignInModal from "@/components/auth/SignInModal";
@@ -21,13 +21,6 @@ interface Props {
     initialVideos: Video[];
 }
 
-interface User {
-    username: string;
-    email: string;
-    profilePic?: string;
-    token: string; // Add token property
-
-}
 
 const fetchVideos = async (searchQuery: string) => {
     const response = await axios.get(
@@ -39,7 +32,6 @@ const fetchVideos = async (searchQuery: string) => {
 
 const fetchUser = async () => {
     const token = localStorage.getItem("authToken"); // Ensure the token is stored in localStorage
-    console.log("token::::::", token)
     if (!token) throw new Error("No authentication token found");
 
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users/me`, {
@@ -54,24 +46,21 @@ const fetchUser = async () => {
 export default function VideoPage({ initialVideos }: Props) {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    // const [user, setUser] = useState<User | null>(null);
 
 
-    const { data: videos = initialVideos, isLoading, refetch } = useQuery({
+    const { data: videos = initialVideos, isLoading } = useQuery({
         queryKey: ["videos", searchQuery],
         queryFn: () => fetchVideos(searchQuery),
         initialData: initialVideos,
-        // enabled: false, // Disable automatic fetching
     });
 
     // Fetch user using React Query
-    const { data: user, isError, isLoading: isUserLoading } = useQuery({
+    const { data: user } = useQuery({
         queryKey: ["user"],
         queryFn: fetchUser,
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     });
 
-    console.log("user::::::::::", user)
 
     const handleSignOut = () => {
         localStorage.removeItem("authToken"); // Remove token
@@ -81,29 +70,6 @@ export default function VideoPage({ initialVideos }: Props) {
                 window.location.reload();
             });
     };
-
-
-    // const handleSearch = () => {
-    //   refetch();
-    // };
-
-    // const handleSignInSuccess = (userData: User) => {
-    //     localStorage.setItem("user", JSON.stringify(userData));
-    //     setUser(userData);
-    //     setIsModalOpen(false);
-    // };
-
-    // const handleSignOut = () => {
-    //     localStorage.removeItem("user");
-    //     setUser(null);
-    // };
-
-    // useEffect(() => {
-    //     const storedUser = localStorage.getItem("user");
-    //     if (storedUser) {
-    //         setUser(JSON.parse(storedUser));
-    //     }
-    // }, []);
 
 
 
@@ -117,8 +83,6 @@ export default function VideoPage({ initialVideos }: Props) {
                     <SearchBar
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        // onSearch={fetchVideos}
-                        // onSearch={() => refetch()} // Fetch on button press
                         onSearch={() => { }}
                     />
                 </div>
@@ -144,14 +108,6 @@ export default function VideoPage({ initialVideos }: Props) {
             <SignInModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-            // onSignInSuccess={handleSignInSuccess}
-
-
-            // onSignInSuccess={(userData: User) => {
-            //     localStorage.setItem("authToken", userData.token); // Save token
-            //     window.location.reload();
-            // }}
-
             />
 
             {/* Video Grid */}
