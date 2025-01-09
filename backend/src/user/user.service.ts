@@ -28,18 +28,40 @@ export class UserService {
         return newUser.save();
     }
 
-    async findUserById(userId: string): Promise<User> {
-        return this.userModel.findById(userId).exec();
+    // async findUserById(userId: string): Promise<User> {
+    //     return this.userModel.findById(userId).exec();
+    // }
+    async findUserById(userId: string): Promise<Partial<User>> {
+        return this.userModel.findById(userId).lean().exec(); // Use lean() for plain objects
     }
 
 
-    async validateUser(email: string, password: string): Promise<User | null> {
+
+    // async validateUser(email: string, password: string): Promise<User | null> {
+    //     const user = await this.userModel.findOne({ email }).exec();
+    //     if (!user || user.password !== password) {
+    //         throw new UnauthorizedException('Invalid credentials');
+    //     }
+    //     return user;
+    // }
+
+    // async validateUser(email: string, password: string): Promise<User | null> {
+    //     const user = await this.userModel.findOne({ email }).exec();
+    //     if (!user || user.password !== password) {
+    //         throw new UnauthorizedException('Invalid credentials');
+    //     }
+    //     const { password: _, ...userWithoutPassword } = user.toObject(); // Exclude password
+    //     return userWithoutPassword;
+    // }
+
+    async validateUser(email: string, password: string): Promise<Partial<User> | null> {
         const user = await this.userModel.findOne({ email }).exec();
         if (!user || user.password !== password) {
             throw new UnauthorizedException('Invalid credentials');
         }
-        return user;
-    }
 
+        const { password: _, ...userWithoutPassword } = user.toObject(); // Transform object
+        return userWithoutPassword;
+    }
 
 }

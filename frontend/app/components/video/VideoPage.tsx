@@ -39,6 +39,7 @@ const fetchVideos = async (searchQuery: string) => {
 
 const fetchUser = async () => {
     const token = localStorage.getItem("authToken"); // Ensure the token is stored in localStorage
+    console.log("token::::::", token)
     if (!token) throw new Error("No authentication token found");
 
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users/me`, {
@@ -142,23 +143,23 @@ export default function VideoPage({ initialVideos }: Props) {
             {/* Sign-In Modal */}
             <SignInModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                // onSignInSuccess={handleSignInSuccess}
+            // onClose={() => setIsModalOpen(false)}
+            // onSignInSuccess={handleSignInSuccess}
 
-                // onSignInSuccess={(user) => {
-                //     console.log("User signed in:", user);
-                //     // Perform any additional actions like setting user in state or localStorage if needed
-                // }}
+            // onSignInSuccess={(user) => {
+            //     console.log("User signed in:", user);
+            //     // Perform any additional actions like setting user in state or localStorage if needed
+            // }}
 
-                // onSignInSuccess={(userData) => {
-                //     localStorage.setItem("authToken", userData.token); // Save token
-                //     window.location.reload();
-                // }}
+            // onSignInSuccess={(userData) => {
+            //     localStorage.setItem("authToken", userData.token); // Save token
+            //     window.location.reload();
+            // }}
 
-                onSignInSuccess={(userData: User) => {
-                    localStorage.setItem("authToken", userData.token); // Save token
-                    window.location.reload();
-                }}
+            // onSignInSuccess={(userData: User) => {
+            //     localStorage.setItem("authToken", userData.token); // Save token
+            //     window.location.reload();
+            // }}
 
             />
 
