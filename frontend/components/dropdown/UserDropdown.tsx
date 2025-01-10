@@ -1,26 +1,29 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import useStore from "@/store/useStore";
+
 
 interface User {
+    id: string;
     username: string;
     email: string;
-    profilePic?: string;
     channels?: Array<{
         channelName: string;
         description: string;
         profilePic: string;
-    }>; // Add channels property
-
+    }>;
 }
 
 interface UserDropdownProps {
     user: User;
-    onSignOut: () => void;
 }
 
-const UserDropdown: React.FC<UserDropdownProps> = ({ user, onSignOut }) => {
+const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
     const router = useRouter();
     const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    // Use the signOut action from Zustand
+    const signOut = useStore((state) => state.signOut);
 
     return (
         <div className="relative">
@@ -58,7 +61,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user, onSignOut }) => {
                         </button>
                         <button
                             className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
-                            onClick={onSignOut}
+                            onClick={signOut} // Directly call the Zustand action
                         >
                             Sign Out
                         </button>

@@ -4,15 +4,10 @@ import axios from "axios";
 import Modal from "../shared/Modal";
 import FormInput from "../shared/FormInput";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useStore from "@/store/useStore";
 
 
-interface SignInModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-
-}
-
-const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => {
+const SignInModal: React.FC = () => {
     const [isSignUp, setIsSignUp] = useState(true);
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -20,6 +15,9 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => {
     const [channelName, setChannelName] = useState("");
     const [description, setDescription] = useState("");
     const [profilePic, setProfilePic] = useState<File | null>(null);
+
+    const isModalOpen = useStore((state) => state.isModalOpen);
+    const setIsModalOpen = useStore((state) => state.setIsModalOpen);
 
     const queryClient = useQueryClient();
 
@@ -53,7 +51,8 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => {
 
             queryClient.invalidateQueries({ queryKey: ["user"] }); // Invalidate user queries if cached
             resetForm(); // Reset form
-            onClose(); // Close modal
+            setIsModalOpen(false); // Close the modal using Zustand
+
         },
         onError: (error) => {
             console.error("Error during authentication:", error);
@@ -86,14 +85,8 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => {
     };
 
 
-    // Close modal and reset form
-    const handleClose = () => {
-        resetForm();
-        onClose();
-    };
-
     return (
-        <Modal isOpen={isOpen} onClose={handleClose}>
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
             <h2 className="text-xl font-bold mb-4">{isSignUp ? "Sign Up" : "Login"}</h2>
             <div className="flex flex-col gap-2">
                 {isSignUp && (

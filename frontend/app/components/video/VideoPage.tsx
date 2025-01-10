@@ -1,12 +1,12 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import VideoCard from "./VideoCard";
 import SearchBar from "@/components/search/SearchBar";
 import SignInModal from "@/components/auth/SignInModal";
 import UserDropdown from "@/components/dropdown/UserDropdown";
 import Loader from "@/components/shared/Loader";
 import axios from "axios";
+import useStore from "@/store/useStore";
 
 interface Video {
     _id: string;
@@ -16,6 +16,7 @@ interface Video {
     views: number;
     uploadedAt: string;
 }
+
 
 interface Props {
     initialVideos: Video[];
@@ -44,13 +45,14 @@ const fetchUser = async () => {
 };
 
 export default function VideoPage({ initialVideos }: Props) {
-    const [searchQuery, setSearchQuery] = useState<string>("");
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+
+    const setIsModalOpen = useStore((state) => state.setIsModalOpen);
 
 
     const { data: videos = initialVideos, isLoading } = useQuery({
-        queryKey: ["videos", searchQuery],
-        queryFn: () => fetchVideos(searchQuery),
+        queryKey: ["videos", useStore.getState().searchQuery], // Zustand's searchQuery state
+        queryFn: () => fetchVideos(useStore.getState().searchQuery),
         initialData: initialVideos,
     });
 
@@ -59,17 +61,8 @@ export default function VideoPage({ initialVideos }: Props) {
         queryKey: ["user"],
         queryFn: fetchUser,
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+
     });
-
-
-    const handleSignOut = () => {
-        localStorage.removeItem("authToken"); // Remove token
-
-        axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/logout`, {}, { withCredentials: true })
-            .then(() => {
-                window.location.reload();
-            });
-    };
 
 
 
@@ -80,17 +73,14 @@ export default function VideoPage({ initialVideos }: Props) {
 
                 {/* Search Bar */}
                 <div className="flex-grow max-w-lg">
-                    <SearchBar
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onSearch={() => { }}
-                    />
+                    <SearchBar />
                 </div>
 
                 {/* User Profile or Sign-In */}
                 <div>
                     {user ? (
-                        <UserDropdown user={user} onSignOut={handleSignOut} />
+                        <UserDropdown user={user} />
+
                     ) : (
                         <button
                             onClick={() => setIsModalOpen(true)}
@@ -105,10 +95,7 @@ export default function VideoPage({ initialVideos }: Props) {
 
 
             {/* Sign-In Modal */}
-            <SignInModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-            />
+            <SignInModal />
 
             {/* Video Grid */}
             {isLoading ? (
