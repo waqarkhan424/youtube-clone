@@ -3,28 +3,10 @@ import { useRouter } from "next/navigation";
 import useStore from "@/store/useStore";
 
 
-// interface User {
-//     id: string;
-//     username: string;
-//     email: string;
-//     channels?: Array<{
-//         channelName: string;
-//         description: string;
-//         profilePic: string;
-//     }>;
-// }
 
-// interface UserDropdownProps {
-//     user: User;
-// }
-
-// const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
 const UserDropdown: React.FC = () => {
     const router = useRouter();
     const [dropdownOpen, setDropdownOpen] = useState(false);
-
-    // // Use the signOut action from Zustand
-    // const signOut = useStore((state) => state.signOut);
 
 
     // Access the user and signOut action from Zustand
@@ -42,14 +24,8 @@ const UserDropdown: React.FC = () => {
     return (
         <div className="relative">
             <img
-                // src={
-                //     user.channels?.[0]?.profilePic
-                //         ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${user.channels[0].profilePic}`
-                //         : ""
-                // }
                 src={profilePicUrl}
                 alt="Profile Picture"
-                // alt={`${user.username}'s profile`}
                 className="w-10 h-10 rounded-full border cursor-pointer"
                 onClick={() => setDropdownOpen((prev) => !prev)}
             />
@@ -57,12 +33,6 @@ const UserDropdown: React.FC = () => {
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50">
                     <div className="p-4">
                         <img
-                            // src={
-                            //     user.channels?.[0]?.profilePic
-                            //         ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${user.channels[0].profilePic}`
-                            //         : "/default-profile.png"
-                            // }
-                            // alt="Profile"
                             src={profilePicUrl}
                             alt="Profile Picture"
                             className="w-12 h-12 rounded-full mx-auto"

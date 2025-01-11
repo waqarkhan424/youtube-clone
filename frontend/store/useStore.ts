@@ -53,7 +53,6 @@ const useStore = create<AppState>((set) => ({
             });
     },
 
-
     fetchUser: async () => {
         try {
             const token = localStorage.getItem("authToken"); // Ensure the token is stored in localStorage

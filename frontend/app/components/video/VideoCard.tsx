@@ -21,8 +21,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ title, url, thumbnailUrl, views, 
                 title={title}
                 views={views}
                 uploadedAt={uploadedAt}
-            // channelName="Apna College" // Placeholder; pass actual channel name if available
-            // thumbnailUrl={thumbnailUrl}
             />
         </div>
     );

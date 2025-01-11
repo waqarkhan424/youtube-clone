@@ -5,16 +5,13 @@ interface VideoDetailsProps {
     title: string;
     views: number;
     uploadedAt: string;
-    // channelName: string;
-    // thumbnailUrl: string;
 }
 
 const VideoDetails: React.FC<VideoDetailsProps> = ({
     title,
     views,
     uploadedAt,
-    // channelName,
-    // thumbnailUrl,
+
 }) => {
 
     const user = useStore((state) => state.user);
@@ -46,12 +43,6 @@ const VideoDetails: React.FC<VideoDetailsProps> = ({
     return (
         <div className="flex mt-2 gap-2 items-start">
             <img
-                // src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${thumbnailUrl}`}
-                // src={
-                //     user.channels?.[0]?.profilePic
-                //         ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${user.channels[0].profilePic}`
-                //         : ""
-                // }
                 src={profilePicUrl}
                 alt="Channel Profile"
                 className="w-9 h-9 rounded-full"
