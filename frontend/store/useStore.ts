@@ -56,8 +56,9 @@ const useStore = create<AppState>((set) => ({
     fetchUser: async () => {
         try {
             const token = localStorage.getItem("authToken"); // Ensure the token is stored in localStorage
-            if (!token) throw new Error("No authentication token found");
-
+            if (!token) {
+                return null; // Return null if no token is available
+            }
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users/me`, {
                 withCredentials: true, // Ensure cookies are sent
                 headers: {
@@ -65,6 +66,7 @@ const useStore = create<AppState>((set) => ({
                 },
             });
             set({ user: response.data });
+            return response.data; // Return the user data
         } catch (error) {
             console.error("Failed to fetch user:", error);
             set({ user: null }); // Clear user on error
