@@ -31,21 +31,25 @@ const fetchVideos = async (searchQuery: string) => {
 };
 
 
-const fetchUser = async () => {
-    const token = localStorage.getItem("authToken"); // Ensure the token is stored in localStorage
-    if (!token) throw new Error("No authentication token found");
+// const fetchUser = async () => {
+//     const token = localStorage.getItem("authToken"); // Ensure the token is stored in localStorage
+//     if (!token) throw new Error("No authentication token found");
 
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users/me`, {
-        withCredentials: true, // Ensure cookies are sent
-        headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the request
-        },
-    });
-    return response.data;
-};
+//     const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users/me`, {
+//         withCredentials: true, // Ensure cookies are sent
+//         headers: {
+//             Authorization: `Bearer ${token}`, // Include the token in the request
+//         },
+//     });
+//     return response.data;
+// };
 
 export default function VideoPage({ initialVideos }: Props) {
 
+
+    const fetchUser = useStore((state) => state.fetchUser);
+
+    const user = useStore((state) => state.user);
 
     const setIsModalOpen = useStore((state) => state.setIsModalOpen);
 
@@ -56,14 +60,21 @@ export default function VideoPage({ initialVideos }: Props) {
         initialData: initialVideos,
     });
 
-    // Fetch user using React Query
-    const { data: user } = useQuery({
+    // // Fetch user using React Query
+    // const { data: user } = useQuery({
+    //     queryKey: ["user"],
+    //     queryFn: fetchUser,
+    //     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+
+    // });
+
+
+    // Fetch user on component mount
+    useQuery({
         queryKey: ["user"],
         queryFn: fetchUser,
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-
     });
-
 
 
     return (
@@ -79,7 +90,8 @@ export default function VideoPage({ initialVideos }: Props) {
                 {/* User Profile or Sign-In */}
                 <div>
                     {user ? (
-                        <UserDropdown user={user} />
+                        // <UserDropdown user={user} />
+                        <UserDropdown />
 
                     ) : (
                         <button

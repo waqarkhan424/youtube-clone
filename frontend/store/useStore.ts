@@ -30,6 +30,8 @@ interface AppState {
 
     signOut: () => void; // New action for sign-out logic
 
+    fetchUser: () => Promise<void>; // Fetch and store the user
+
 }
 
 const useStore = create<AppState>((set) => ({
@@ -50,6 +52,27 @@ const useStore = create<AppState>((set) => ({
                 window.location.reload(); // Reload the app
             });
     },
+
+
+    fetchUser: async () => {
+        try {
+            const token = localStorage.getItem("authToken"); // Ensure the token is stored in localStorage
+            if (!token) throw new Error("No authentication token found");
+
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users/me`, {
+                withCredentials: true, // Ensure cookies are sent
+                headers: {
+                    Authorization: `Bearer ${token}`, // Include the token in the request
+                },
+            });
+            set({ user: response.data });
+        } catch (error) {
+            console.error("Failed to fetch user:", error);
+            set({ user: null }); // Clear user on error
+        }
+    },
+
+
 
 
 

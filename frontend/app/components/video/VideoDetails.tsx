@@ -1,21 +1,23 @@
 import { formatDistance } from "date-fns";
+import useStore from "@/store/useStore";
 
 interface VideoDetailsProps {
     title: string;
     views: number;
     uploadedAt: string;
-    channelName: string;
-    thumbnailUrl: string;
+    // channelName: string;
+    // thumbnailUrl: string;
 }
 
 const VideoDetails: React.FC<VideoDetailsProps> = ({
     title,
     views,
     uploadedAt,
-    channelName,
-    thumbnailUrl,
+    // channelName,
+    // thumbnailUrl,
 }) => {
 
+    const user = useStore((state) => state.user);
 
     const formatTimeAgo = (date: string) => {
         const now = new Date();
@@ -31,11 +33,26 @@ const VideoDetails: React.FC<VideoDetailsProps> = ({
         return formatted.replace(/^about\s/, ''); // Remove "about" if present
     };
 
+    if (!user || !user.channels?.length) {
+        return null; // Return nothing if user or channels are unavailable
+    }
+
+    const { channels } = user;
+    const { channelName, profilePic } = channels[0];
+
+    const profilePicUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${profilePic}`;
+
 
     return (
         <div className="flex mt-2 gap-2 items-start">
             <img
-                src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${thumbnailUrl}`}
+                // src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${thumbnailUrl}`}
+                // src={
+                //     user.channels?.[0]?.profilePic
+                //         ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${user.channels[0].profilePic}`
+                //         : ""
+                // }
+                src={profilePicUrl}
                 alt="Channel Profile"
                 className="w-9 h-9 rounded-full"
             />
