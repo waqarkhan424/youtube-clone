@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Patch, Body, Param, Query, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Body, Param, Query, UseInterceptors, UploadedFiles, Delete, } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -10,8 +10,11 @@ export class VideoController {
     constructor(private readonly videoService: VideoService) { }
 
 
-
-
+    // Add a new route for deleting a video
+    @Delete(':id')
+    async deleteVideo(@Param('id') videoId: string) {
+        return this.videoService.deleteVideo(videoId);
+    }
 
 
 

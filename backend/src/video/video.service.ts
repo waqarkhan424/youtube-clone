@@ -11,6 +11,19 @@ export class VideoService {
         @InjectModel(User.name) private userModel: Model<User>
     ) { }
 
+
+
+
+    // Add a method to delete a video
+    async deleteVideo(videoId: string): Promise<void> {
+        const video = await this.videoModel.findById(videoId).exec();
+        if (!video) {
+            throw new NotFoundException('Video not found');
+        }
+        await this.videoModel.deleteOne({ _id: videoId }).exec();
+    }
+
+
     // Add a comment to a video
     async addComment(videoId: string, commentData: { userId: string; text: string }): Promise<Video> {
         const { userId, text } = commentData;

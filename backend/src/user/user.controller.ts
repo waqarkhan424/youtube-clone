@@ -53,7 +53,6 @@ export class UserController {
         if (profilePic) {
             userData.profilePic = `/uploads/profile-pics/${profilePic.filename}`; // Store the full path
         }
-        // return this.userService.createUser(userData);
 
         // Create the user in the database
         const newUser = await this.userService.createUser(userData);
