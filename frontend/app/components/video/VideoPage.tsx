@@ -15,6 +15,8 @@ interface Video {
     thumbnailUrl: string;
     views: number;
     uploadedAt: string;
+    userId: string; // User ID associated with the video
+
 }
 
 
@@ -45,7 +47,6 @@ export default function VideoPage({ initialVideos }: Props) {
         queryFn: () => fetchVideos(useStore.getState().searchQuery),
         initialData: initialVideos,
     });
-
 
     // Fetch user on component mount
     useQuery({
@@ -98,6 +99,8 @@ export default function VideoPage({ initialVideos }: Props) {
                             views={video.views}
                             uploadedAt={video.uploadedAt}
                             thumbnailUrl={video.thumbnailUrl}
+                            userId={video.userId}
+
                         />
                     ))}
                 </div>

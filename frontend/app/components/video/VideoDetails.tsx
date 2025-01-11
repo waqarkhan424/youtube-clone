@@ -1,20 +1,27 @@
 import { formatDistance } from "date-fns";
-import useStore from "@/store/useStore";
 
 interface VideoDetailsProps {
     title: string;
     views: number;
     uploadedAt: string;
+    user: {
+        username: string;
+        channels: Array<{
+            channelName: string;
+            profilePic: string;
+        }>;
+    };
 }
+
+
 
 const VideoDetails: React.FC<VideoDetailsProps> = ({
     title,
     views,
     uploadedAt,
-
+    user,
 }) => {
 
-    const user = useStore((state) => state.user);
 
     const formatTimeAgo = (date: string) => {
         const now = new Date();

@@ -9,6 +9,9 @@ interface Video {
     views: number;
     likes: number;
     uploadedAt: string;
+    userId: string; // Ensure userId is part of the Video type
+
+
 }
 
 interface VideoListProps {
@@ -26,6 +29,8 @@ const VideoList: React.FC<VideoListProps> = ({ videos }) => {
                     views={video.views}
                     uploadedAt={video.uploadedAt}
                     thumbnailUrl={video.thumbnailUrl}
+                    userId={video.userId}
+
                 />
             ))}
         </div>

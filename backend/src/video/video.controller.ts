@@ -1,9 +1,8 @@
-import { Controller, Post, Get, UseGuards, Req, Patch, Body, Param, Query, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Body, Param, Query, UseInterceptors, UploadedFiles } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { AuthGuard } from '@nestjs/passport';
 
 
 @Controller('videos')

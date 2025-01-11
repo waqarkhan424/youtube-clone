@@ -5,6 +5,7 @@ import VideoUploadForm from "./components/VideoUploadForm";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Loader from "@/components/shared/Loader";
 import axios from "axios";
+import useStore from "@/store/useStore";
 
 
 interface Video {
@@ -16,23 +17,11 @@ interface Video {
     views: number;
     likes: number;
     uploadedAt: string;
+    userId: string; // Ensure userId is part of the Video type
+
 }
 
 
-
-
-const fetchUser = async () => {
-    const token = localStorage.getItem("authToken"); // Ensure the token is stored in localStorage
-    if (!token) throw new Error("No authentication token found");
-
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users/me`, {
-        withCredentials: true, // Ensure cookies are sent
-        headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the request
-        },
-    });
-    return response.data;
-};
 
 
 const fetchUserVideos = async (userId: string): Promise<Video[]> => {
@@ -59,19 +48,25 @@ const ChannelDashboard: React.FC = () => {
     const queryClient = useQueryClient();
 
 
+    const fetchUser = useStore((state) => state.fetchUser);
 
-    // Fetch user data using React Query
-    const { data: user, isLoading: isUserLoading } = useQuery({
+    const user = useStore((state) => state.user);
+
+
+    // Fetch user on component mount
+    useQuery({
         queryKey: ["user"],
         queryFn: fetchUser,
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     });
 
+
     // Fetch user videos using React Query
     const { data: videos = [], isLoading } = useQuery({
         queryKey: ["userVideos", user?._id],
-        queryFn: () => fetchUserVideos(user?._id),
-        enabled: !!user, // Only run this query when user data is available
+        queryFn: () => fetchUserVideos(user!._id),
+        enabled: !!user?._id, // Ensure the query only runs when user._id is defined
+
     });
 
 
@@ -106,7 +101,6 @@ const ChannelDashboard: React.FC = () => {
 
 
         if (!user?._id) {
-            alert("User not found. Please refresh the page.");
             return;
         }
 
@@ -118,7 +112,7 @@ const ChannelDashboard: React.FC = () => {
         }
         formData.append("title", title);
         formData.append("description", description);
-        formData.append("userId", user._id); // Pass the userId from user data
+        formData.append("userId", user._id); // Pass the userId from Zustand state
 
         mutation.mutate(formData);
 
