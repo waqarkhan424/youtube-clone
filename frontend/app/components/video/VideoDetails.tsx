@@ -1,4 +1,4 @@
-import { formatDistance } from "date-fns";
+import { formatTimeAgo } from "@/lib/utils";
 
 interface VideoDetailsProps {
     title: string;
@@ -22,20 +22,6 @@ const VideoDetails: React.FC<VideoDetailsProps> = ({
     user,
 }) => {
 
-
-    const formatTimeAgo = (date: string) => {
-        const now = new Date();
-        const diffInSeconds = Math.round((now.getTime() - new Date(date).getTime()) / 1000);
-
-        if (diffInSeconds < 60) {
-            // Handle cases for less than a minute
-            return `${diffInSeconds} second${diffInSeconds === 1 ? '' : 's'} ago`;
-        }
-
-        // Fallback to date-fns for larger differences
-        const formatted = formatDistance(new Date(date), now, { addSuffix: true });
-        return formatted.replace(/^about\s/, ''); // Remove "about" if present
-    };
 
     if (!user || !user.channels?.length) {
         return null; // Return nothing if user or channels are unavailable

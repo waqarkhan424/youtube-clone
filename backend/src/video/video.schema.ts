@@ -1,6 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
+
+export interface Comment {
+    userId: string;
+    username: string;
+    text: string;
+    postedAt: Date;
+}
 @Schema()
 export class Video extends Document {
     @Prop({ required: true })
@@ -27,6 +34,12 @@ export class Video extends Document {
     @Prop({ default: 0 })
     dislikes: number;
 
+    @Prop({ default: [] })
+    likedBy: string[]; // Array of user IDs who liked the video
+
+    @Prop({ default: [] })
+    dislikedBy: string[]; // Array of user IDs who disliked the video
+
     @Prop({ required: false })
     thumbnailUrl: string; // New field for thumbnail URL
 
@@ -41,7 +54,8 @@ export class Video extends Document {
         ],
         default: [],
     })
-    comments: Array<{ userId: string; username: string; text: string; postedAt: Date }>;
+    comments: Comment[];
+
 }
 
 export const VideoSchema = SchemaFactory.createForClass(Video);

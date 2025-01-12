@@ -10,7 +10,6 @@ export class VideoController {
     constructor(private readonly videoService: VideoService) { }
 
 
-
     // Upload a video
     @Post()
     @UseInterceptors(
@@ -73,7 +72,6 @@ export class VideoController {
 
 
 
-    // Fetch all videos
     @Get()
     async findAll(@Query('q') query: string) {
         return this.videoService.findAll(query);
@@ -110,31 +108,45 @@ export class VideoController {
 
 
 
+
+
+    // Fetch comments for a video
+    @Get(':id/comments')
+    async getComments(@Param('id') videoId: string) {
+        return this.videoService.getComments(videoId);
+    }
+
     // Add a comment to a video
     @Post(':id/comment')
-    async addComment(
-        @Param('id') videoId: string,
-        @Body() comment: { userId: string; text: string }
-    ) {
-        return this.videoService.addComment(videoId, comment);
+    async addComment(@Param('id') videoId: string, @Body() commentData: { userId: string; text: string }) {
+        return this.videoService.addComment(videoId, commentData);
     }
 
 
     // Increment video views
     @Patch(':id/views')
     async incrementViews(@Param('id') videoId: string) {
-        return this.videoService.incrementViews(videoId);
+        // Call service to increment view count
+        const updatedVideo = await this.videoService.incrementViews(videoId);
+        return updatedVideo;
     }
+
+
+
+
+
 
     // Like a video
     @Patch(':id/like')
-    async likeVideo(@Param('id') videoId: string) {
-        return this.videoService.likeVideo(videoId);
+    async likeVideo(@Param('id') videoId: string, @Body('userId') userId: string) {
+        return this.videoService.likeVideo(videoId, userId);
     }
 
     // Dislike a video
     @Patch(':id/dislike')
-    async dislikeVideo(@Param('id') videoId: string) {
-        return this.videoService.dislikeVideo(videoId);
+    async dislikeVideo(@Param('id') videoId: string, @Body('userId') userId: string) {
+        return this.videoService.dislikeVideo(videoId, userId);
     }
+
+
 }
