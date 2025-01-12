@@ -10,22 +10,6 @@ export class VideoController {
     constructor(private readonly videoService: VideoService) { }
 
 
-    // Add a new route for deleting a video
-    @Delete(':id')
-    async deleteVideo(@Param('id') videoId: string) {
-        return this.videoService.deleteVideo(videoId);
-    }
-
-
-
-    // Add a comment to a video
-    @Post(':id/comment')
-    async addComment(
-        @Param('id') videoId: string,
-        @Body() comment: { userId: string; text: string }
-    ) {
-        return this.videoService.addComment(videoId, comment);
-    }
 
     // Upload a video
     @Post()
@@ -95,11 +79,46 @@ export class VideoController {
         return this.videoService.findAll(query);
     }
 
-    // Fetch videos by user
-    @Get(':userId')
+
+
+    // ===========================
+    //        USER ROUTE
+    // ===========================
+    @Get('user/:userId')
     async findByUser(@Param('userId') userId: string) {
         return this.videoService.findByUserId(userId);
     }
+
+
+    // ===========================
+    //      SINGLE VIDEO ROUTE
+    // ===========================
+
+    @Get(':id')
+    async findVideoById(@Param('id') videoId: string) {
+        return this.videoService.findVideoById(videoId);
+    }
+
+
+
+
+    // Add a new route for deleting a video
+    @Delete(':id')
+    async deleteVideo(@Param('id') videoId: string) {
+        return this.videoService.deleteVideo(videoId);
+    }
+
+
+
+    // Add a comment to a video
+    @Post(':id/comment')
+    async addComment(
+        @Param('id') videoId: string,
+        @Body() comment: { userId: string; text: string }
+    ) {
+        return this.videoService.addComment(videoId, comment);
+    }
+
 
     // Increment video views
     @Patch(':id/views')

@@ -26,7 +26,7 @@ interface Video {
 
 const fetchUserVideos = async (userId: string): Promise<Video[]> => {
     const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/videos/${userId}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/videos/user/${userId}`
     );
     return response.data;
 };

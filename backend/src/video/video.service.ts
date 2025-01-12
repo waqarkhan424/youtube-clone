@@ -84,6 +84,15 @@ export class VideoService {
     }
 
 
+    async findVideoById(videoId: string): Promise<Video> {
+        const video = await this.videoModel.findById(videoId).exec();
+        if (!video) {
+            throw new NotFoundException("Video not found");
+        }
+        return video;
+    }
+
+
     async incrementViews(videoId: string): Promise<Video> {
         return this.videoModel.findByIdAndUpdate(
             videoId,

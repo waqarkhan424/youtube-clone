@@ -7,6 +7,7 @@ import UserDropdown from "@/components/dropdown/UserDropdown";
 import Loader from "@/components/shared/Loader";
 import axios from "axios";
 import useStore from "@/store/useStore";
+import { useRouter } from "next/navigation";
 
 interface Video {
     _id: string;
@@ -33,6 +34,7 @@ const fetchVideos = async (searchQuery: string) => {
 };
 
 export default function VideoPage({ initialVideos }: Props) {
+    const router = useRouter();
 
 
     const fetchUser = useStore((state) => state.fetchUser);
@@ -55,6 +57,10 @@ export default function VideoPage({ initialVideos }: Props) {
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     });
 
+
+    const handleVideoClick = (videoId: string) => {
+        router.push(`/video/${videoId}`); // Navigate to the video details page
+    };
 
     return (
         <div className="p-4">
@@ -92,16 +98,21 @@ export default function VideoPage({ initialVideos }: Props) {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {videos.map((video: Video) => (
-                        <VideoCard
-                            key={video._id}
-                            title={video.title}
-                            url={video.url}
-                            views={video.views}
-                            uploadedAt={video.uploadedAt}
-                            thumbnailUrl={video.thumbnailUrl}
-                            userId={video.userId}
 
-                        />
+                        <div key={video._id} onClick={() => handleVideoClick(video._id)}>
+                            <VideoCard
+                                title={video.title}
+                                url={video.url}
+                                views={video.views}
+                                uploadedAt={video.uploadedAt}
+                                thumbnailUrl={video.thumbnailUrl}
+                                userId={video.userId}
+                            />
+                        </div>
+
+
+
+
                     ))}
                 </div>
             )}

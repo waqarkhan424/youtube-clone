@@ -10,7 +10,6 @@ import { JwtService } from '@nestjs/jwt';
 
 @Controller('users')
 export class UserController {
-    // constructor(private readonly userService: UserService) { }
 
     constructor(
         private readonly userService: UserService,
