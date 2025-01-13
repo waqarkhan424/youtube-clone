@@ -7,7 +7,7 @@ import { formatDistance } from "date-fns";
 import axios from "axios";
 
 
-interface SuggestedVideosProps {
+interface SuggestedVideosCardProps {
     title: string;
     url: string;
     thumbnailUrl: string;
@@ -25,7 +25,7 @@ const fetchUserDetails = async (userId: string) => {
     return response.data;
 };
 
-const SuggestedVideos: React.FC<SuggestedVideosProps> = ({ title, url: videoUrl, thumbnailUrl, views, uploadedAt, userId }) => {
+const SuggestedVideosCard: React.FC<SuggestedVideosCardProps> = ({ title, url: videoUrl, thumbnailUrl, views, uploadedAt, userId }) => {
     const [duration, setDuration] = useState<string>("");
     const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -137,4 +137,4 @@ const SuggestedVideos: React.FC<SuggestedVideosProps> = ({ title, url: videoUrl,
     );
 };
 
-export default SuggestedVideos;
+export default SuggestedVideosCard;
