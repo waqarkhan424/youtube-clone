@@ -44,17 +44,17 @@ export default function VideoPage({ initialVideos }: Props) {
     const setIsModalOpen = useStore((state) => state.setIsModalOpen);
 
 
-    const { data: videos = initialVideos, isLoading } = useQuery({
-        queryKey: ["videos", useStore.getState().searchQuery], // Zustand's searchQuery state
-        queryFn: () => fetchVideos(useStore.getState().searchQuery),
-        initialData: initialVideos,
-    });
-
     // Fetch user on component mount
     useQuery({
         queryKey: ["user"],
         queryFn: fetchUser,
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    });
+
+    const { data: videos = initialVideos, isLoading } = useQuery({
+        queryKey: ["videos", useStore.getState().searchQuery], // Zustand's searchQuery state
+        queryFn: () => fetchVideos(useStore.getState().searchQuery),
+        initialData: initialVideos,
     });
 
 
@@ -92,8 +92,16 @@ export default function VideoPage({ initialVideos }: Props) {
             {/* Sign-In Modal */}
             <SignInModal />
 
-            {/* Video Grid */}
-            {isLoading ? (
+            {/* Video Content */}
+            {!user ? (
+
+                <div className="flex items-center justify-center h-[20vh]">
+                    <p className="text-gray-500 text-center">
+                        Please sign in to view the videos.
+                    </p>
+                </div>
+
+            ) : isLoading ? (
                 <Loader />
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

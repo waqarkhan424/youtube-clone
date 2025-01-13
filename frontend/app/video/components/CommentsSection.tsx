@@ -57,10 +57,12 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
             {/* Existing Comments */}
             <div className="space-y-4">
-                {comments.map((comment) => {
-                    // console.log("comment::::::::", comment)
+                {comments.map((comment, index) => {
+
+                    // Use _id as the key or fallback to index if _id is not available
+                    const key = comment._id || `comment-${index}`
                     return (
-                        <div key={comment._id} className="flex items-start gap-2">
+                        <div key={key} className="flex items-start gap-2">
                             <img
                                 src={
                                     comment.profilePic

@@ -356,9 +356,7 @@ export default function VideoDetailsPage({
         comments,
         otherVideos,
         currentUserId,
-
-        currentUserProfilePic, // Use this here
-
+        currentUserProfilePic,
         handleLike,
         handleDislike,
         handleAddComment,
@@ -437,17 +435,19 @@ export default function VideoDetailsPage({
                 {/* <SuggestedVideosCard videos={otherVideos} /> */}
 
                 {/* //////////////// */}
-                {otherVideos.map((otherVideo) => (
-                    <SuggestedVideosCard
-                        key={otherVideo._id}
-                        title={otherVideo.title}
-                        url={otherVideo.url}
-                        views={otherVideo.views}
-                        uploadedAt={otherVideo.uploadedAt}
-                        thumbnailUrl={otherVideo.thumbnailUrl}
-                        userId={otherVideo.userId}
-                    />
-                ))}
+                <div className="space-y-4">
+                    {otherVideos.map((otherVideo) => (
+                        <SuggestedVideosCard
+                            key={otherVideo._id}
+                            title={otherVideo.title}
+                            url={otherVideo.url}
+                            views={otherVideo.views}
+                            uploadedAt={otherVideo.uploadedAt}
+                            thumbnailUrl={otherVideo.thumbnailUrl}
+                            userId={otherVideo.userId}
+                        />
+                    ))}
+                </div>
 
 
                 {/* //////////////////// */}

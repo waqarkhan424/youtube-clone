@@ -160,9 +160,7 @@ export function useVideoDetails(videoId: string | null): UseVideoDetailsResult {
         comments,
         otherVideos,
         currentUserId,
-
         currentUserProfilePic,
-
         handleLike,
         handleDislike,
         handleAddComment,
