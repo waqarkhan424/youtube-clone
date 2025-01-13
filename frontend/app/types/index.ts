@@ -15,12 +15,22 @@ export interface Video {
     dislikedBy: string[];
 }
 
+// export interface Comment {
+//     _id: string;
+//     userId: string;
+//     username: string;
+//     text: string;
+//     postedAt: string;
+// }
+
+
 export interface Comment {
     _id: string;
     userId: string;
     username: string;
     text: string;
     postedAt: string;
+    profilePic?: string; // Add optional profilePic
 }
 
 export interface Channel {

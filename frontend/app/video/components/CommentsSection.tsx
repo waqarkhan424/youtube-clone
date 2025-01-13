@@ -1,7 +1,5 @@
-// components/CommentsSection.tsx
 
 import React, { useState } from "react";
-// import { Comment } from "@/types";
 import { Comment } from "@/app/types";
 
 interface CommentsSectionProps {
@@ -26,6 +24,8 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         onAddComment(newComment);
         setNewComment("");
     };
+
+
 
     return (
         <div className="mt-6">
@@ -57,24 +57,32 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
             {/* Existing Comments */}
             <div className="space-y-4">
-                {comments.map((comment) => (
-                    <div key={comment._id} className="flex items-start gap-2">
-                        <img
-                            src={"/default-profile.png"} // If you want to show each commenter's pic, you'd pass it in or fetch it.
-                            alt="Profile"
-                            className="w-10 h-10 rounded-full"
-                        />
-                        <div>
-                            <div className="flex items-center gap-2">
-                                <p className="font-semibold text-sm">@{comment.username}</p>
-                                <p className="text-gray-400 text-xs">
-                                    {formatTimeAgo(comment.postedAt)}
-                                </p>
+                {comments.map((comment) => {
+                    // console.log("comment::::::::", comment)
+                    return (
+                        <div key={comment._id} className="flex items-start gap-2">
+                            <img
+                                src={
+                                    comment.profilePic
+                                        ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${comment.profilePic}`
+                                        : "/default-profile.png"
+                                }
+                                alt={comment.username}
+                                className="w-10 h-10 rounded-full"
+                            />
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <p className="font-semibold text-sm">@{comment.username}</p>
+                                    <p className="text-gray-400 text-xs">
+                                        {formatTimeAgo(comment.postedAt)}
+                                    </p>
+                                </div>
+                                <p className="text-gray-600 text-sm">{comment.text}</p>
                             </div>
-                            <p className="text-gray-600 text-sm">{comment.text}</p>
                         </div>
-                    </div>
-                ))}
+                        // ))}
+                    );
+                })}
             </div>
         </div>
     );

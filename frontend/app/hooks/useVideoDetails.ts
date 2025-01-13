@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-// import { Video, User, Comment } from "@/types";
 import { Video, User, Comment } from "../types";
 import useStore from "@/store/useStore";
 
@@ -150,6 +149,9 @@ export function useVideoDetails(videoId: string | null): UseVideoDetailsResult {
             console.error("Error adding comment:", error);
         }
     };
+
+
+
 
     return {
         isLoading,

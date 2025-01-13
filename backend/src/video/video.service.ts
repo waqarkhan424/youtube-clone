@@ -30,12 +30,23 @@ export class VideoService {
 
     // Get comments
     async getComments(videoId: string): Promise<Comment[]> {
-        const video = await this.videoModel.findById(videoId).exec();
+        const video = await this.videoModel.findById(videoId).lean().exec();
         if (!video) {
             throw new NotFoundException("Video not found");
         }
-        return video.comments;
+        const enrichedComments = await Promise.all(
+            video.comments.map(async (comment) => {
+                const user = await this.userModel.findById(comment.userId).lean().exec();
+                return {
+                    ...comment,
+                    profilePic: user?.channels[0]?.profilePic || null,
+                };
+            })
+        );
+        return enrichedComments;
     }
+
+
 
     // Add comment
     async addComment(videoId: string, commentData: { userId: string; text: string }): Promise<Comment> {
@@ -60,11 +71,13 @@ export class VideoService {
 
         video.comments.push(newComment);
         await video.save();
-        return newComment;
+
+        // Include profilePic in the returned comment
+        return {
+            ...newComment,
+            profilePic: user.channels[0]?.profilePic || null,
+        };
     }
-
-
-
 
 
 

@@ -7,6 +7,7 @@ export interface Comment {
     username: string;
     text: string;
     postedAt: Date;
+    profilePic?: string; // Add profilePic as an optional field
 }
 @Schema()
 export class Video extends Document {
@@ -50,6 +51,8 @@ export class Video extends Document {
                 username: String,
                 text: String,
                 postedAt: { type: Date, default: Date.now },
+                profilePic: String,
+
             },
         ],
         default: [],
