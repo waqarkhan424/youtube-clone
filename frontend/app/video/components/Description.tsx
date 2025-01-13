@@ -1,4 +1,3 @@
-// components/Description.tsx
 
 import React from "react";
 

@@ -1,4 +1,3 @@
-// components/LikeDislikeButtons.tsx
 
 import React from "react";
 

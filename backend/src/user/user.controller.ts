@@ -3,8 +3,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { UserService } from './user.service';
-import { Express } from 'express'; // Import Express types
-import { AuthGuard } from '@nestjs/passport'; // Assuming you are using Passport.js for authentication
+import { Express } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
 
 

@@ -82,7 +82,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                                 <p className="text-gray-600 text-sm">{comment.text}</p>
                             </div>
                         </div>
-                        // ))}
                     );
                 })}
             </div>

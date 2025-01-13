@@ -1,4 +1,3 @@
-// components/ChannelInfo.tsx
 
 import React from "react";
 

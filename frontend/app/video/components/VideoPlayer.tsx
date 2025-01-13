@@ -1,4 +1,3 @@
-// components/VideoPlayer.tsx
 
 import React from "react";
 

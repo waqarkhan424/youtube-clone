@@ -1,4 +1,3 @@
-// types/index.ts
 
 export interface Video {
     _id: string;
@@ -15,13 +14,6 @@ export interface Video {
     dislikedBy: string[];
 }
 
-// export interface Comment {
-//     _id: string;
-//     userId: string;
-//     username: string;
-//     text: string;
-//     postedAt: string;
-// }
 
 
 export interface Comment {
