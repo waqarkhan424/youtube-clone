@@ -1,4 +1,15 @@
-import FormInput from "@/components/shared/FormInput";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+
 
 interface VideoUploadFormProps {
     title: string;
@@ -24,44 +35,66 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
     onUpload,
 }) => {
     return (
-        <div className="mb-6">
-            <FormInput
-                type="text"
-                placeholder="Video Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-            />
-            <FormInput
-                type="textarea"
-                placeholder="Video Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-            />
-            <label className="block text-gray-700 mb-1" htmlFor="video-upload">
-                Upload Video (MP4, AVI, etc.)
-            </label>
-            <FormInput
-                id="video-upload"
-                type="file"
-                accept="video/*"
-                onChange={(e) => setVideo((e.target as HTMLInputElement).files?.[0] || null)}
-            />
-            <label className="block text-gray-700 mb-1" htmlFor="thumbnail-upload">
-                Upload Thumbnail (JPEG, PNG, etc.)
-            </label>
-            <FormInput
-                id="thumbnail-upload"
-                type="file"
-                accept="image/*"
-                onChange={(e) => setThumbnail((e.target as HTMLInputElement).files?.[0] || null)}
-            />
-            <button
-                onClick={onUpload}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md mt-2"
-            >
-                Upload Video
-            </button>
-        </div>
+
+        <Card>
+            <CardHeader>
+                <CardTitle>Manage and upload your videos</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="space-y-4">
+                    <div>
+                        <Label htmlFor="title">Title</Label>
+                        <Input
+                            id="title"
+                            placeholder="Enter video title"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <Label htmlFor="description">Description</Label>
+                        <Textarea
+                            id="description"
+                            placeholder="Enter video description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                    </div>
+
+                    <div>
+                        <Label htmlFor="video-upload">Upload Video </Label>
+                        <Input
+                            id="video-upload"
+                            type="file"
+                            accept="video/*"
+                            onChange={(e) =>
+                                setVideo((e.target as HTMLInputElement).files?.[0] || null)
+                            }
+                            placeholder="Upload video file"
+                        />
+                    </div>
+
+                    <div>
+                        <Label htmlFor="thumbnail-upload">Upload Thumbnail</Label>
+                        <Input
+                            id="thumbnail-upload"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>
+                                setThumbnail((e.target as HTMLInputElement).files?.[0] || null)
+                            }
+                            placeholder="Upload thumbnail image"
+                        />
+                    </div>
+                </div>
+            </CardContent>
+            <CardFooter>
+                <Button onClick={onUpload}>Upload</Button>
+            </CardFooter>
+        </Card>
+
+
+
     );
 };
 

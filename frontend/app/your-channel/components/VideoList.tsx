@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import VideoCard from "@/app/components/video/VideoCard";
+import { Button } from '@/components/ui/button';
 
 interface Video {
     _id: string;
@@ -58,35 +59,39 @@ const VideoList: React.FC<VideoListProps> = ({ videos }) => {
 
         <div>
             {/* Video Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {videos.map((video) => (
-                    <div
-                        key={video._id}
-                        className={`relative border-2 ${selectedVideoId === video._id ? 'border-blue-500' : 'border-transparent'}`}
-                        onClick={() => handleSelect(video._id)} // Select or deselect video on click
-                    >
-                        <VideoCard
-                            title={video.title}
-                            url={video.url}
-                            views={video.views}
-                            uploadedAt={video.uploadedAt}
-                            thumbnailUrl={video.thumbnailUrl}
-                            userId={video.userId}
-                        />
-                    </div>
-                ))}
+            < div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" >
+                {
+                    videos.map((video) => (
+                        <div
+                            key={video._id}
+                            className={`relative border-2 ${selectedVideoId === video._id ? 'border-blue-500' : 'border-transparent'}`}
+                            onClick={() => handleSelect(video._id)} // Select or deselect video on click
+                        >
+                            <VideoCard
+                                title={video.title}
+                                url={video.url}
+                                views={video.views}
+                                uploadedAt={video.uploadedAt}
+                                thumbnailUrl={video.thumbnailUrl}
+                                userId={video.userId}
+                            />
+                        </div>
+                    ))
+                }
             </div>
 
+
             {/* Delete Button */}
-            <div className="flex justify-center mt-4">
-                <button
+            < div className="flex justify-center mt-4" >
+                <Button
                     onClick={handleDelete}
-                    className={`px-4 py-2 bg-red-500 text-white rounded-md ${!selectedVideoId ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    variant="destructive"
                     disabled={!selectedVideoId} // Disable button if no video is selected
                 >
                     Delete Selected Video
-                </button>
-            </div>
+                </Button>
+
+            </div >
         </div>
 
 

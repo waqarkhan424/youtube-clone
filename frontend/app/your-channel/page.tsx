@@ -3,9 +3,10 @@ import { useState } from "react";
 import VideoList from "./components/VideoList";
 import VideoUploadForm from "./components/VideoUploadForm";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import Loader from "@/components/shared/Loader";
 import axios from "axios";
 import useStore from "@/store/useStore";
+import { Loader2 } from "lucide-react"; // ShadCN loader icon
+import Typography from "@/components/ui/typography";
 
 
 interface Video {
@@ -120,8 +121,8 @@ const ChannelDashboard: React.FC = () => {
 
 
     return (
-        <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">Your Channel Dashboard</h1>
+        <div className="p-6 space-y-6">
+            <Typography variant="h2">Your Channel Dashboard</Typography>
             <VideoUploadForm
                 title={title}
                 description={description}
@@ -133,13 +134,16 @@ const ChannelDashboard: React.FC = () => {
                 setThumbnail={setThumbnail}
                 onUpload={handleVideoUpload}
             />
-            <h2 className="text-xl font-semibold mb-4">Your Videos</h2>
+            <Typography variant="h2">Your Videos</Typography>
             {isLoading ? (
-                <Loader />
+                <div className="flex justify-center">
+                    <Loader2 className="animate-spin w-6 h-6" />
+                </div>
             ) : (
                 <VideoList videos={videos} />
             )}
         </div>
+
     );
 };
 
