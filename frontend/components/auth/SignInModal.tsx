@@ -1,11 +1,19 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
-import Modal from "../shared/Modal";
-import FormInput from "../shared/FormInput";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useStore from "@/store/useStore";
-
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogFooter,
+    DialogTitle,
+} from "@/components/ui/dialog";
 
 const SignInModal: React.FC = () => {
     const [isSignUp, setIsSignUp] = useState(true);
@@ -86,75 +94,90 @@ const SignInModal: React.FC = () => {
 
 
     return (
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-            <h2 className="text-xl font-bold mb-4">{isSignUp ? "Sign Up" : "Login"}</h2>
-            <div className="flex flex-col gap-2">
-                {isSignUp && (
-                    <>
-                        <div>
-                            <label
-                                htmlFor="profile-pic-upload"
-                                className="block text-gray-700 mb-1"
-                            >
-                                Upload Profile Picture
-                            </label>
-                            <FormInput
-                                id="profile-pic-upload"
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => setProfilePic((e.target as HTMLInputElement).files?.[0] || null)}
-                            />
-                        </div>
 
-                        <FormInput
-                            type="text"
-                            placeholder="Username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <DialogContent className="max-h-[80vh] overflow-y-auto">
+                <DialogHeader>
+                    <DialogTitle>{isSignUp ? "Sign Up" : "Login"}</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col gap-4">
+                    {isSignUp && (
+                        <>
+                            <div>
+                                <Label htmlFor="profile-pic-upload">Upload Profile </Label>
+                                <Input
+                                    id="profile-pic-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => setProfilePic((e.target as HTMLInputElement).files?.[0] || null)}
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="username">Username</Label>
+                                <Input
+                                    id="username"
+                                    type="text"
+                                    placeholder="Username"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="channel-name">Channel Name</Label>
+                                <Input
+                                    id="channel-name"
+                                    type="text"
+                                    placeholder="Channel Name"
+                                    value={channelName}
+                                    onChange={(e) => setChannelName(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="description">Description</Label>
+                                <Textarea
+                                    id="description"
+                                    placeholder="Description"
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                />
+                            </div>
+                        </>
+                    )}
+                    <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                            id="email"
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
-                        <FormInput
-                            type="text"
-                            placeholder="Channel Name"
-                            value={channelName}
-                            onChange={(e) => setChannelName(e.target.value)}
+                    </div>
+                    <div>
+                        <Label htmlFor="password">Password</Label>
+                        <Input
+                            id="password"
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
-                        <FormInput
-                            type="textarea"
-                            placeholder="Description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            isTextArea
-                        />
-                    </>
-                )}
-                <FormInput
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <FormInput
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-            </div>
-            <div className="flex justify-between mt-4">
-                <button
-                    onClick={() => setIsSignUp(!isSignUp)}
-                    className="text-blue-500"
-                >
-                    {isSignUp ? "Already have an account? Login" : "Don't have an account? Sign Up"}
-                </button>
-                <button
-                    onClick={handleSubmit}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                >
-                    {isSignUp ? "Sign Up" : "Login"}
-                </button>
-            </div>
-        </Modal>
+                    </div>
+                </div>
+
+
+
+                <DialogFooter>
+                    <Button variant="ghost" onClick={() => setIsSignUp(!isSignUp)}>
+                        {isSignUp ? "Already have an account? Login" : "Don't have an account? Sign Up"}
+                    </Button>
+                    <Button onClick={handleSubmit}>
+                        {isSignUp ? "Sign Up" : "Login"}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+
     );
 };
 
