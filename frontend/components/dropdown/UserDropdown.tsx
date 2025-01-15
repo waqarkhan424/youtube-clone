@@ -1,12 +1,17 @@
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useStore from "@/store/useStore";
-
+import Typography from "../ui/typography";
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 
 const UserDropdown: React.FC = () => {
     const router = useRouter();
-    const [dropdownOpen, setDropdownOpen] = useState(false);
 
 
     // Access the user and signOut action from Zustand
@@ -22,41 +27,50 @@ const UserDropdown: React.FC = () => {
     const profilePicUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${profilePic}`;
 
     return (
-        <div className="relative">
-            <img
-                src={profilePicUrl}
-                alt="Profile Picture"
-                className="w-10 h-10 rounded-full border cursor-pointer"
-                onClick={() => setDropdownOpen((prev) => !prev)}
-            />
-            {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50">
-                    <div className="p-4">
-                        <img
-                            src={profilePicUrl}
-                            alt="Profile Picture"
-                            className="w-12 h-12 rounded-full mx-auto"
-                        />
-                        <p className="text-center mt-2 font-bold">{username}</p>
-                        <p className="text-center text-gray-600 text-sm">{email}</p>
-                    </div>
-                    <div className="border-t">
-                        <button
-                            className="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100"
-                            onClick={() => router.push("/your-channel")}
+
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <img
+                    src={profilePicUrl}
+                    alt="Profile Picture"
+                    className="w-9 h-9 rounded-full border cursor-pointer"
+                />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+                <div className="p-4 flex items-center gap-2">
+                    <img
+                        src={profilePicUrl}
+                        alt="Profile Picture"
+                        className="w-9 h-9 rounded-full mx-auto"
+                    />
+                    <div className="text-left">
+
+                        <Typography
+                            variant="p"
+                            size="sm"
                         >
-                            View Your Channel
-                        </button>
-                        <button
-                            className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
-                            onClick={signOut} // Directly call the Zustand action
+                            {username}
+                        </Typography>
+                        <Typography
+                            variant="p"
+                            size="xs"
+                            affects="muted"
                         >
-                            Sign Out
-                        </button>
+                            {email}
+                        </Typography>
+
                     </div>
                 </div>
-            )}
-        </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push("/your-channel")}>
+                    View Your Channel
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={signOut}>Sign Out</DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+
+
+
     );
 };
 

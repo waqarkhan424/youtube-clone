@@ -1,5 +1,5 @@
 import { formatTimeAgo } from "@/lib/utils";
-
+import Typography from "@/components/ui/typography";
 interface VideoDetailsProps {
     title: string;
     views: number;
@@ -41,24 +41,30 @@ const VideoDetails: React.FC<VideoDetailsProps> = ({
                 className="w-9 h-9 rounded-full"
             />
             <div className="flex-1">
-                <h3
-                    className="text-sm font-semibold overflow-hidden text-ellipsis"
-                    style={{
-                        display: "-webkit-box",
-                        WebkitBoxOrient: "vertical",
-                        WebkitLineClamp: 2,
-                        lineHeight: "1.2em",
-                        maxHeight: "2.4em",
-                    }}
+
+                <Typography
+                    variant="h4"
+                    size="md"
+                    affects="default"
+                    className="line-clamp-2 break-words"
                 >
                     {title}
-                </h3>
-                <p className="text-xs text-gray-500 flex items-center gap-1">
+                </Typography>
+
+
+                <Typography
+                    variant="p"
+                    affects="description"
+                >
                     {channelName}
-                </p>
-                <div className="flex items-center gap-1 text-xs text-gray-500">
+                </Typography>
+
+                <Typography
+                    variant="p"
+                    affects="muted"
+                >
                     {views} views • {formatTimeAgo(uploadedAt)}
-                </div>
+                </Typography>
 
             </div>
 

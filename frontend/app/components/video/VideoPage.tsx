@@ -4,7 +4,7 @@ import VideoCard from "./VideoCard";
 import SearchBar from "@/components/search/SearchBar";
 import SignInModal from "@/components/auth/SignInModal";
 import UserDropdown from "@/components/dropdown/UserDropdown";
-import Loader from "@/components/shared/Loader";
+import { Loader2 } from "lucide-react";
 import axios from "axios";
 import useStore from "@/store/useStore";
 import { useRouter } from "next/navigation";
@@ -67,7 +67,15 @@ export default function VideoPage({ initialVideos }: Props) {
     return (
         <div className="p-2 px-4">
             <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold">Videos</h1>
+
+                <div className="flex items-center gap-2">
+                    <img
+                        src="/YouTube-Logo.wine.svg"
+                        alt="YouTube Logo"
+                        className="w-24 h-auto"
+                    />
+                </div>
+
 
                 {/* Search Bar */}
                 <div className="flex-grow max-w-lg">
@@ -108,7 +116,9 @@ export default function VideoPage({ initialVideos }: Props) {
                 </Card>
 
             ) : isLoading ? (
-                <Loader />
+                <div className="flex justify-center">
+                    <Loader2 className="animate-spin w-6 h-6" />
+                </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 mt-10">
                     {videos.map((video: Video) => (

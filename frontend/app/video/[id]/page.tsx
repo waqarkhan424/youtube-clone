@@ -68,7 +68,14 @@ export default function VideoDetailsPage({
 
 
             <div className="flex justify-between items-center py-2 px-4">
-                <h1 className="text-2xl font-bold">Videos</h1>
+
+                <div className="flex items-center gap-2">
+                    <img
+                        src="/YouTube-Logo.wine.svg"
+                        alt="YouTube Logo"
+                        className="w-24 h-auto"
+                    />
+                </div>
 
                 <div className="flex-grow max-w-lg">
                     <SearchBar />

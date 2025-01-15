@@ -114,6 +114,7 @@ const SuggestedVideosCard: React.FC<SuggestedVideosCardProps> = ({ title, url: v
                 {/* Title */}
                 <Typography
                     variant="h3"
+                    size="md"
                     affects="default"
                     className="line-clamp-2 break-words"
                 >

@@ -16,7 +16,7 @@ const ChannelInfo: React.FC<ChannelInfoProps> = ({
             <img
                 src={profilePicUrl}
                 alt="Profile"
-                className="w-10 h-10 rounded-full"
+                className="w-9 h-9 rounded-full"
             />
             <div className="flex-1">
                 <Typography variant="h3" affects="default">

@@ -39,7 +39,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                 <img
                     src={currentUserProfilePic || "/default-profile.png"}
                     alt="Profile"
-                    className="w-10 h-10 rounded-full"
+                    className="w-9 h-9 rounded-full"
                 />
                 <div className="flex-1">
                     <Input
@@ -69,7 +69,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                                         : "/default-profile.png"
                                 }
                                 alt={comment.username}
-                                className="w-10 h-10 rounded-full"
+                                className="w-9 h-9 rounded-full"
                             />
                             <div>
                                 <div className="flex items-center gap-2">
