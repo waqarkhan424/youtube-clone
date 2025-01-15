@@ -129,7 +129,6 @@ export default function VideoDetailsPage({
 
                 {/* Suggested Videos Section */}
                 <div className="w-full md:w-2/5">
-                    <Typography variant="h2" className="mb-4">Suggested Videos</Typography>
                     <div className="space-y-4">
                         {otherVideos.map((otherVideo) => (
                             <SuggestedVideosCard
