@@ -89,7 +89,6 @@ export default function VideoDetailsPage({
 
 
 
-            {/* <div className="flex flex-col md:flex-row gap-8 p-4"> */}
             <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 flex flex-col md:flex-row gap-8">
 
                 {/* Main Video Section */}
@@ -129,7 +128,6 @@ export default function VideoDetailsPage({
                 </div>
 
                 {/* Suggested Videos Section */}
-                {/* <div className="w-full md:w-1/3"> */}
                 <div className="w-full md:w-2/5">
                     <Typography variant="h2" className="mb-4">Suggested Videos</Typography>
                     <div className="space-y-4">

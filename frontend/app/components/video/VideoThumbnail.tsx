@@ -41,7 +41,6 @@ const VideoThumbnail: React.FC<VideoThumbnailProps> = ({ thumbnailUrl, videoUrl,
             <img
                 src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${thumbnailUrl}`}
                 alt={title}
-                // className="w-full h-48 object-cover rounded-lg"
                 className="w-full h-56 object-cover rounded-lg"
             />
             <video

@@ -34,7 +34,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ title, url, thumbnailUrl, views, 
 
 
     return (
-        // <div className="max-w-xs">
         <div>
             <VideoThumbnail
                 thumbnailUrl={thumbnailUrl}
