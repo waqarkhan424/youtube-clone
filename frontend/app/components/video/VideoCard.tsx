@@ -34,7 +34,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ title, url, thumbnailUrl, views, 
 
 
     return (
-        <div>
+        <div className="cursor-pointer">
             <VideoThumbnail
                 thumbnailUrl={thumbnailUrl}
                 videoUrl={url}

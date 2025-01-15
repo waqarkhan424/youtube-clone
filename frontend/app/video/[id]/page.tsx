@@ -12,6 +12,7 @@ import { formatTimeAgo } from "@/lib/utils"; // or wherever your util is
 import Typography from "@/components/ui/typography";
 import SearchBar from "@/components/search/SearchBar";
 import UserDropdown from "@/components/dropdown/UserDropdown";
+import { Loader2 } from "lucide-react";
 
 export default function VideoDetailsPage({
     params,
@@ -41,8 +42,13 @@ export default function VideoDetailsPage({
         handleAddComment,
     } = useVideoDetails(videoId);
 
+
     if (isLoading || !video) {
-        return <p>Loading...</p>;
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <Loader2 className="animate-spin w-6 h-6" />
+            </div>
+        )
     }
 
     // If there's no uploader or channels, you can return a fallback
@@ -139,6 +145,8 @@ export default function VideoDetailsPage({
                                 uploadedAt={otherVideo.uploadedAt}
                                 thumbnailUrl={otherVideo.thumbnailUrl}
                                 userId={otherVideo.userId}
+                                videoId={otherVideo._id}
+
                             />
                         ))}
                     </div>

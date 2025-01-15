@@ -116,7 +116,7 @@ export default function VideoPage({ initialVideos }: Props) {
                 </Card>
 
             ) : isLoading ? (
-                <div className="flex justify-center">
+                <div className="flex justify-center items-center h-screen">
                     <Loader2 className="animate-spin w-6 h-6" />
                 </div>
             ) : (

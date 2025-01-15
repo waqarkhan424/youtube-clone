@@ -1,9 +1,8 @@
-
-
 import { useQuery } from "@tanstack/react-query";
 import { useRef, useState, useEffect } from "react";
 import { formatTimeAgo } from "@/lib/utils";
 import Typography from "@/components/ui/typography";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 
 
@@ -14,7 +13,7 @@ interface SuggestedVideosCardProps {
     views: number;
     uploadedAt: string;
     userId: string; // User ID associated with the video
-
+    videoId: string
 
 }
 
@@ -25,9 +24,10 @@ const fetchUserDetails = async (userId: string) => {
     return response.data;
 };
 
-const SuggestedVideosCard: React.FC<SuggestedVideosCardProps> = ({ title, url: videoUrl, thumbnailUrl, views, uploadedAt, userId }) => {
+const SuggestedVideosCard: React.FC<SuggestedVideosCardProps> = ({ title, url: videoUrl, thumbnailUrl, views, uploadedAt, userId, videoId }) => {
     const [duration, setDuration] = useState<string>("");
     const videoRef = useRef<HTMLVideoElement>(null);
+    const router = useRouter();
 
 
 
@@ -71,12 +71,18 @@ const SuggestedVideosCard: React.FC<SuggestedVideosCardProps> = ({ title, url: v
     const { channels } = user;
     const { channelName } = channels[0];
 
+    const handleNavigate = () => {
+        router.push(`/video/${videoId}`);
+    };
 
 
 
 
     return (
-        <div className="flex items-start gap-4">
+        <div className="flex items-start gap-4 cursor-pointer"
+            onClick={handleNavigate}
+
+        >
 
             {/* Thumbnail and Video Container */}
 

@@ -136,9 +136,10 @@ const ChannelDashboard: React.FC = () => {
             />
             <Typography variant="h2">Your Videos</Typography>
             {isLoading ? (
-                <div className="flex justify-center">
+                <div className="flex justify-center items-center h-screen">
                     <Loader2 className="animate-spin w-6 h-6" />
                 </div>
+
             ) : (
                 <VideoList videos={videos} />
             )}
