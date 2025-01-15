@@ -36,7 +36,7 @@ const UserDropdown: React.FC = () => {
                     className="w-9 h-9 rounded-full border cursor-pointer"
                 />
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuContent align="end" className="w-56">
                 <div className="p-4 flex items-center gap-2">
                     <img
                         src={profilePicUrl}

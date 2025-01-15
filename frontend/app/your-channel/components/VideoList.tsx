@@ -25,7 +25,7 @@ interface VideoListProps {
 
 const VideoList: React.FC<VideoListProps> = ({ videos }) => {
     const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null); // State for selected video ID
-    const { toast } = useToast(); // Destructure the toast function
+    const { toast } = useToast();
 
 
     const queryClient = useQueryClient();
@@ -53,15 +53,29 @@ const VideoList: React.FC<VideoListProps> = ({ videos }) => {
     });
 
 
+
     const handleDelete = () => {
-        if (selectedVideoId && confirm('Are you sure you want to delete this video?')) {
-            deleteMutation.mutate(selectedVideoId);
-        }
+        if (!selectedVideoId) return;
+
+        toast({
+            title: "Confirm Deletion",
+            description: "Are you sure you want to delete this video?",
+            variant: "default",
+            action: (
+                <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => deleteMutation.mutate(selectedVideoId)} // Trigger the delete mutation
+                >
+                    Confirm
+                </Button>
+            ),
+        });
     };
 
 
+
     const handleSelect = (videoId: string) => {
-        // Toggle selection: deselect if the same video is clicked again
         setSelectedVideoId((prevSelected) => (prevSelected === videoId ? null : videoId));
     };
 
