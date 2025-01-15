@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRef, useState, useEffect } from "react";
 import { formatTimeAgo } from "@/lib/utils";
+import Typography from "@/components/ui/typography";
 import axios from "axios";
 
 
@@ -79,7 +80,10 @@ const SuggestedVideosCard: React.FC<SuggestedVideosCardProps> = ({ title, url: v
 
             {/* Thumbnail and Video Container */}
 
-            <div className="relative  w-24 h-16 rounded-lg overflow-hidden">
+
+            <div className="relative  w-52 h-28 rounded-lg overflow-hidden">
+
+
                 {/* Thumbnail */}
 
                 <img
@@ -105,15 +109,35 @@ const SuggestedVideosCard: React.FC<SuggestedVideosCardProps> = ({ title, url: v
             </div>
 
 
-            <div>
-                <h3 className="text-sm font-semibold">{title}</h3>
-                <p className="text-xs text-gray-600">
+
+            <div className="flex-1">
+                {/* Title */}
+                <Typography
+                    variant="h3"
+                    affects="default"
+                    className="line-clamp-2 break-words"
+                >
+                    {title}
+                </Typography>
+
+                {/* Channel Name */}
+                <Typography
+                    variant="p"
+                    affects="description"
+                >
                     {channelName}
-                </p>
-                <p className="text-xs text-gray-500">
+                </Typography>
+
+                {/* Views and Uploaded Time */}
+                <Typography
+                    variant="p"
+                    affects="muted"
+                >
                     {views} views • {formatTimeAgo(uploadedAt)}
-                </p>
+                </Typography>
             </div>
+
+
         </div>
     );
 };

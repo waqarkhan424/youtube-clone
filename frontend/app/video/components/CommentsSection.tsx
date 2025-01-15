@@ -1,6 +1,9 @@
 
 import React, { useState } from "react";
 import { Comment } from "@/app/types";
+import Typography from "@/components/ui/typography";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface CommentsSectionProps {
     currentUserId?: string;
@@ -29,7 +32,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
     return (
         <div className="mt-6">
-            <h2 className="text-lg font-semibold mb-4">{comments.length} Comments</h2>
+            <Typography variant="h2" className=" mb-4">{comments.length} Comments</Typography>
 
             {/* New Comment Box */}
             <div className="flex items-start gap-2 mb-6">
@@ -39,24 +42,20 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                     className="w-10 h-10 rounded-full"
                 />
                 <div className="flex-1">
-                    <input
+                    <Input
                         type="text"
                         placeholder="Add a comment..."
-                        className="w-full border border-gray-300 rounded-lg p-2"
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
                     />
                 </div>
-                <button
-                    onClick={handleAddComment}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-                >
+                <Button onClick={handleAddComment} variant="secondary">
                     Comment
-                </button>
+                </Button>
             </div>
 
             {/* Existing Comments */}
-            <div className="space-y-4">
+            <div className="space-y-10">
                 {comments.map((comment, index) => {
 
                     // Use _id as the key or fallback to index if _id is not available
@@ -74,12 +73,20 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                             />
                             <div>
                                 <div className="flex items-center gap-2">
-                                    <p className="font-semibold text-sm">@{comment.username}</p>
-                                    <p className="text-gray-400 text-xs">
+
+                                    <Typography variant="p" size="sm" className="font-semibold">
+                                        @{comment.username}
+                                    </Typography>
+
+                                    <Typography variant="p" size="xs">
                                         {formatTimeAgo(comment.postedAt)}
-                                    </p>
+                                    </Typography>
+
                                 </div>
-                                <p className="text-gray-600 text-sm">{comment.text}</p>
+                                <Typography variant="p" size="sm" className="font-normal">
+                                    {comment.text}
+                                </Typography>
+
                             </div>
                         </div>
                     );

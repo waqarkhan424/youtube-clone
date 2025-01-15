@@ -8,6 +8,8 @@ import Loader from "@/components/shared/Loader";
 import axios from "axios";
 import useStore from "@/store/useStore";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 
 interface Video {
     _id: string;
@@ -63,7 +65,7 @@ export default function VideoPage({ initialVideos }: Props) {
     };
 
     return (
-        <div className="p-4">
+        <div className="p-2 px-4">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">Videos</h1>
 
@@ -77,13 +79,12 @@ export default function VideoPage({ initialVideos }: Props) {
                     {user ? (
                         <UserDropdown />
                     ) : (
-                        <button
+                        <Button
+                            variant="ghost"
                             onClick={() => setIsModalOpen(true)}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-md"
-
                         >
                             Sign In
-                        </button>
+                        </Button>
                     )}
                 </div>
             </div>
@@ -95,16 +96,21 @@ export default function VideoPage({ initialVideos }: Props) {
             {/* Video Content */}
             {!user ? (
 
-                <div className="flex items-center justify-center h-[20vh]">
-                    <p className="text-gray-500 text-center">
-                        Please sign in to view the videos.
-                    </p>
-                </div>
+                <Card className="max-w-lg mx-auto mt-10 shadow-2xl">
+                    <CardContent className="text-center p-8">
+                        <CardTitle className="mb-4">
+                            Please sign in to view the videos.
+                        </CardTitle>
+                        <CardDescription>
+                            Start watching videos to help us build a feed of videos you'll love.
+                        </CardDescription>
+                    </CardContent>
+                </Card>
 
             ) : isLoading ? (
                 <Loader />
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 mt-10">
                     {videos.map((video: Video) => (
 
                         <div key={video._id} onClick={() => handleVideoClick(video._id)}>
@@ -117,8 +123,6 @@ export default function VideoPage({ initialVideos }: Props) {
                                 userId={video.userId}
                             />
                         </div>
-
-
 
 
                     ))}

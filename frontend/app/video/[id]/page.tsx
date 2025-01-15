@@ -9,6 +9,9 @@ import Description from "../components/Description";
 import CommentsSection from "../components/CommentsSection";
 import SuggestedVideosCard from "../components/SuggestedVideosCard";
 import { formatTimeAgo } from "@/lib/utils"; // or wherever your util is
+import Typography from "@/components/ui/typography";
+import SearchBar from "@/components/search/SearchBar";
+import UserDropdown from "@/components/dropdown/UserDropdown";
 
 export default function VideoDetailsPage({
     params,
@@ -60,61 +63,84 @@ export default function VideoDetailsPage({
 
 
     return (
-        <div className="flex flex-col md:flex-row gap-8 p-4">
-            {/* Main Video Section */}
-            <div className="flex-1">
-                <VideoPlayer
-                    videoUrl={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${video.url}`}
-                    title={video.title}
-                />
-                <h1 className="text-2xl font-bold mt-4">{video.title}</h1>
+        <div>
 
-                <div className="flex items-center justify-between">
-                    <ChannelInfo channelName={channelName} profilePicUrl={profilePicUrl} />
-                    <LikeDislikeButtons
-                        likes={video.likes}
-                        dislikes={video.dislikes}
-                        isLiked={isLiked}
-                        isDisliked={isDisliked}
-                        onLike={handleLike}
-                        onDislike={handleDislike}
+
+
+            <div className="flex justify-between items-center py-2 px-4">
+                <h1 className="text-2xl font-bold">Videos</h1>
+
+                <div className="flex-grow max-w-lg">
+                    <SearchBar />
+                </div>
+
+                <div>
+                    <UserDropdown />
+
+                </div>
+            </div>
+
+
+
+            {/* <div className="flex flex-col md:flex-row gap-8 p-4"> */}
+            <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 flex flex-col md:flex-row gap-8">
+
+                {/* Main Video Section */}
+                <div className="flex-1">
+                    <VideoPlayer
+                        videoUrl={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${video.url}`}
+                        title={video.title}
+
+                    />
+                    <Typography variant="h2" className="mt-4">{video.title}</Typography>
+                    <div className="flex items-center justify-between mt-4">
+                        <ChannelInfo channelName={channelName} profilePicUrl={profilePicUrl} />
+                        <LikeDislikeButtons
+                            likes={video.likes}
+                            dislikes={video.dislikes}
+                            isLiked={isLiked}
+                            isDisliked={isDisliked}
+                            onLike={handleLike}
+                            onDislike={handleDislike}
+                        />
+                    </div>
+
+                    <Description
+                        views={video.views}
+                        uploadedAt={video.uploadedAt}
+                        description={video.description}
+                        formatTimeAgo={formatTimeAgo}
+                    />
+
+                    <CommentsSection
+                        currentUserId={currentUserId}
+                        currentUserProfilePic={currentUserProfilePic}
+                        comments={comments}
+                        onAddComment={handleAddComment}
+                        formatTimeAgo={formatTimeAgo}
                     />
                 </div>
 
-                <Description
-                    views={video.views}
-                    uploadedAt={video.uploadedAt}
-                    description={video.description}
-                    formatTimeAgo={formatTimeAgo}
-                />
+                {/* Suggested Videos Section */}
+                {/* <div className="w-full md:w-1/3"> */}
+                <div className="w-full md:w-2/5">
+                    <Typography variant="h2" className="mb-4">Suggested Videos</Typography>
+                    <div className="space-y-4">
+                        {otherVideos.map((otherVideo) => (
+                            <SuggestedVideosCard
+                                key={otherVideo._id}
+                                title={otherVideo.title}
+                                url={otherVideo.url}
+                                views={otherVideo.views}
+                                uploadedAt={otherVideo.uploadedAt}
+                                thumbnailUrl={otherVideo.thumbnailUrl}
+                                userId={otherVideo.userId}
+                            />
+                        ))}
+                    </div>
 
-                <CommentsSection
-                    currentUserId={currentUserId}
-                    currentUserProfilePic={currentUserProfilePic}
-                    comments={comments}
-                    onAddComment={handleAddComment}
-                    formatTimeAgo={formatTimeAgo}
-                />
-            </div>
 
-            {/* Suggested Videos Section */}
-            <div className="w-full md:w-1/3">
-                <h2 className="text-lg font-semibold mb-4">Suggested Videos</h2>
-                <div className="space-y-4">
-                    {otherVideos.map((otherVideo) => (
-                        <SuggestedVideosCard
-                            key={otherVideo._id}
-                            title={otherVideo.title}
-                            url={otherVideo.url}
-                            views={otherVideo.views}
-                            uploadedAt={otherVideo.uploadedAt}
-                            thumbnailUrl={otherVideo.thumbnailUrl}
-                            userId={otherVideo.userId}
-                        />
-                    ))}
                 </div>
-
-
             </div>
         </div>
     );

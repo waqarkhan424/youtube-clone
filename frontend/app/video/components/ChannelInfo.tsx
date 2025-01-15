@@ -1,5 +1,6 @@
 
 import React from "react";
+import Typography from "@/components/ui/typography";
 
 interface ChannelInfoProps {
     channelName: string;
@@ -11,14 +12,16 @@ const ChannelInfo: React.FC<ChannelInfoProps> = ({
     profilePicUrl,
 }) => {
     return (
-        <div className="flex items-center gap-4 mt-4">
+        <div className="flex items-center gap-4 ">
             <img
                 src={profilePicUrl}
                 alt="Profile"
-                className="w-12 h-12 rounded-full"
+                className="w-10 h-10 rounded-full"
             />
             <div className="flex-1">
-                <h2 className="text-lg font-semibold">{channelName}</h2>
+                <Typography variant="h3" affects="default">
+                    {channelName}
+                </Typography>
             </div>
         </div>
     );

@@ -1,5 +1,6 @@
 
 import React from "react";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
 
 interface LikeDislikeButtonsProps {
     likes: number;
@@ -20,22 +21,15 @@ const LikeDislikeButtons: React.FC<LikeDislikeButtonsProps> = ({
 }) => {
     return (
         <div className="flex items-center gap-4">
-            <button
-                className={`flex items-center gap-1 ${isLiked ? "text-blue-600" : "text-blue-500"
-                    }`}
-                onClick={onLike}
-            >
-                👍 <span>{likes}</span>
+            <button onClick={onLike} className="flex items-center gap-1">
+                <ThumbsUp className="w-5 h-5" /> <span>{likes}</span>
             </button>
 
-            <button
-                className={`flex items-center gap-1 ${isDisliked ? "text-red-600" : "text-red-500"
-                    }`}
-                onClick={onDislike}
-            >
-                👎 <span>{dislikes}</span>
+            <button onClick={onDislike} className="flex items-center gap-1">
+                <ThumbsDown className="w-5 h-5" /> <span>{dislikes}</span>
             </button>
         </div>
+
     );
 };
 

@@ -41,14 +41,15 @@ const VideoThumbnail: React.FC<VideoThumbnailProps> = ({ thumbnailUrl, videoUrl,
             <img
                 src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${thumbnailUrl}`}
                 alt={title}
-                className="w-full h-48 object-cover rounded-lg"
+                // className="w-full h-48 object-cover rounded-lg"
+                className="w-full h-56 object-cover rounded-lg"
             />
             <video
                 ref={videoRef}
                 controls
                 muted
                 loop
-                className="absolute top-0 left-0 w-full h-48 object-cover rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className="absolute top-0 left-0 w-full h-56 object-cover rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             >
                 <source src={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${videoUrl}`} type="video/mp4" />
             </video>
