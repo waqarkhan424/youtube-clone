@@ -51,6 +51,7 @@
 import "./globals.css"; // Import global styles
 import ClientLayout from "./layout.client"; // Import the client-side layout
 import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/toaster"
 
 
 // Metadata for SEO and browser
@@ -64,6 +65,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="en">
             <body>
+
+                {/* Global Toaster for toast notifications */}
+                <Toaster />
+
                 {/* Wrap children with the client-side layout */}
                 <ClientLayout>{children}</ClientLayout>
             </body>

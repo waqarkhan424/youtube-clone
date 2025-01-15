@@ -5,8 +5,9 @@ import VideoUploadForm from "./components/VideoUploadForm";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import useStore from "@/store/useStore";
-import { Loader2 } from "lucide-react"; // ShadCN loader icon
+import { Loader2 } from "lucide-react";
 import Typography from "@/components/ui/typography";
+import { useToast } from "@/hooks/use-toast";
 
 
 interface Video {
@@ -52,6 +53,7 @@ const ChannelDashboard: React.FC = () => {
     const fetchUser = useStore((state) => state.fetchUser);
 
     const user = useStore((state) => state.user);
+    const { toast } = useToast();
 
 
     // Fetch user on component mount
@@ -81,27 +83,49 @@ const ChannelDashboard: React.FC = () => {
             setTitle("");
             setDescription("");
             queryClient.invalidateQueries({ queryKey: ["userVideos"] }); // Refresh the video list
-            alert("Video uploaded successfully!");
+            toast({
+                title: "Success",
+                description: "Video uploaded successfully!",
+                variant: "default",
+            });
+
         },
         onError: () => {
-            alert("Failed to upload video. Please try again.");
+            toast({
+                title: "Error",
+                description: "Failed to upload video. Please try again.",
+                variant: "destructive",
+            });
         },
     });
 
 
     const handleVideoUpload = () => {
         if (!video) {
-            alert("Please select a video file to upload.");
+            toast({
+                title: "Missing Video",
+                description: "Please select a video file to upload.",
+                variant: "destructive",
+            });
             return;
         }
 
         if (!title.trim() || !description.trim()) {
-            alert("Please provide a title and description for the video.");
+            toast({
+                title: "Incomplete Fields",
+                description: "Please provide a title and description for the video.",
+                variant: "destructive",
+            });
             return;
         }
 
 
         if (!user?._id) {
+            toast({
+                title: "User Not Found",
+                description: "Unable to upload video. User not logged in.",
+                variant: "destructive",
+            });
             return;
         }
 

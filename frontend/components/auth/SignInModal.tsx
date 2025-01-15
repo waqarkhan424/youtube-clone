@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 import {
     Dialog,
     DialogContent,
@@ -28,7 +29,7 @@ const SignInModal: React.FC = () => {
     const setIsModalOpen = useStore((state) => state.setIsModalOpen);
 
     const queryClient = useQueryClient();
-
+    const { toast } = useToast();
 
     const resetForm = () => {
         setUsername("");
@@ -58,19 +59,35 @@ const SignInModal: React.FC = () => {
             }
 
             queryClient.invalidateQueries({ queryKey: ["user"] }); // Invalidate user queries if cached
+            toast({
+                title: isSignUp ? "Sign Up Successful" : "Login Successful",
+                description: `Welcome ${isSignUp ? username : email}!`,
+                variant: "default",
+            });
             resetForm(); // Reset form
             setIsModalOpen(false); // Close the modal using Zustand
 
         },
-        onError: (error) => {
-            console.error("Error during authentication:", error);
+        onError: () => {
+            toast({
+                title: "Error",
+                description: isSignUp
+                    ? "Failed to sign up. Please try again."
+                    : "Failed to log in. Please check your credentials.",
+                variant: "destructive",
+            });
+
         },
     });
 
 
     const handleSubmit = () => {
         if (!email.trim() || !password.trim()) {
-            alert("Please provide both email and password.");
+            toast({
+                title: "Missing Fields",
+                description: "Please provide both email and password.",
+                variant: "destructive",
+            });
             return;
         }
 

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import VideoCard from "@/app/components/video/VideoCard";
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 interface Video {
     _id: string;
@@ -24,6 +25,7 @@ interface VideoListProps {
 
 const VideoList: React.FC<VideoListProps> = ({ videos }) => {
     const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null); // State for selected video ID
+    const { toast } = useToast(); // Destructure the toast function
 
 
     const queryClient = useQueryClient();
@@ -34,11 +36,19 @@ const VideoList: React.FC<VideoListProps> = ({ videos }) => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['userVideos'] });
-            alert('Video deleted successfully!');
+            toast({
+                title: "Video Deleted",
+                description: "The video was deleted successfully.",
+                variant: "default",
+            });
             setSelectedVideoId(null); // Clear selection after deletion
         },
         onError: () => {
-            alert('Failed to delete the video.');
+            toast({
+                title: "Error",
+                description: "Failed to delete the video.",
+                variant: "destructive",
+            });
         },
     });
 
