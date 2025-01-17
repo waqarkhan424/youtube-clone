@@ -110,7 +110,7 @@ export default function VideoPage({ initialVideos }: Props) {
                             Please sign in to view the videos.
                         </CardTitle>
                         <CardDescription>
-                            Start watching videos to help us build a feed of videos you'll love.
+                            Start watching videos to help us build a feed of videos you&apos;ll love.
                         </CardDescription>
                     </CardContent>
                 </Card>

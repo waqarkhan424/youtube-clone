@@ -71,6 +71,7 @@ const Typography = React.forwardRef<HTMLHeadingElement, TypographyProps>(
         return (
             <Comp
                 className={cn(typographyVariants({ variant, affects, size, color, className }))}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 ref={ref as any}
                 {...props}
             />
