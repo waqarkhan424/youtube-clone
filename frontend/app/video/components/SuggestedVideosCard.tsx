@@ -57,7 +57,7 @@ const SuggestedVideosCard: React.FC<SuggestedVideosCardProps> = ({ title, url: v
 
 
 
-    const { data: user, isLoading } = useQuery({
+    const { data: user } = useQuery({
         queryKey: ["user", userId],
         queryFn: () => fetchUserDetails(userId),
         enabled: !!userId,

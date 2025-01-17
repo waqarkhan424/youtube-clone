@@ -26,8 +26,8 @@ interface VideoUploadFormProps {
 const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
     title,
     description,
-    video,
-    thumbnail,
+    // video,
+    // thumbnail,
     setTitle,
     setDescription,
     setVideo,

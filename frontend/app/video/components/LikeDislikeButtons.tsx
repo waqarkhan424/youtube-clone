@@ -14,8 +14,8 @@ interface LikeDislikeButtonsProps {
 const LikeDislikeButtons: React.FC<LikeDislikeButtonsProps> = ({
     likes,
     dislikes,
-    isLiked,
-    isDisliked,
+    // isLiked,
+    // isDisliked,
     onLike,
     onDislike,
 }) => {

@@ -14,7 +14,7 @@ interface CommentsSectionProps {
 }
 
 const CommentsSection: React.FC<CommentsSectionProps> = ({
-    currentUserId,
+    // currentUserId,
     currentUserProfilePic,
     comments,
     onAddComment,
